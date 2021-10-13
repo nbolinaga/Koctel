@@ -6,8 +6,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - koctel',
-    title: 'koctel',
+    titleTemplate: '%s',
+    title: 'Koctel',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -36,6 +36,7 @@ export default {
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/sanity/module'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -63,9 +64,12 @@ export default {
       dark: true,
       themes: {
         dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
+          primario: '#9C3B3B',
+          secundario: '#FFFFFF',
+          links: '#CEB992',
+          texto: '#000501',
+          background: '#C2C2C2',
+          detalles: '#2176AE',
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
@@ -74,7 +78,12 @@ export default {
       }
     }
   },
-
+  // Sanity module configuration: https://go.nuxtjs.dev/config-sanity
+  sanity: {
+    projectId: 's25qt0j9',
+    dataset: 'production',
+    useCdn: true
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
