@@ -1,7 +1,7 @@
 <template>
   <v-app :style="{background: $vuetify.theme.themes[theme].background}">>
     <Header />
-    <Nuxt/>
+    <Nuxt class="mt-10"/>
   </v-app>
 </template>
 
