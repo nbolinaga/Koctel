@@ -61,9 +61,9 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
-        dark: {
+        light: {
           primario: '#9C3B3B',
           secundario: '#FFFFFF',
           links: '#CEB992',
@@ -73,7 +73,8 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
+          success: colors.green.accent3,
+          transparent: 'rgba(0,0,0,0)',
         }
       }
     }
@@ -82,7 +83,8 @@ export default {
   sanity: {
     projectId: 's25qt0j9',
     dataset: 'production',
-    useCdn: true
+    useCdn: false,
+    token: 'skGixis99l1hlaib5goQrVR7h2n61F2CJU12bZxyyBUvczzlDlHZM5gWUVyFdbQnlfTSUBuEkV6B54tPHtQL61ipQMk4694KUbaGzuulRc6sVWbhL5yRb5mV6HKD0FsiuIp8o3GSUdF0AbBVv4jL8OGZlflEbpRVnTXzQBsDWghfJwxoCukV'
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
