@@ -1,8 +1,8 @@
 <template>
-    <v-app-bar color="secundario" fixed flat>
+    <v-app-bar color="secundario" fixed flat class="overflow-hidden">
         <LogoLargo fill="#9C3B3B" class="logoHeader"/>
         <v-spacer></v-spacer>
-        <v-list class="d-flex flex-row">
+        <v-list class="d-flex flex-row" >
             <v-list-item v-for="(item, index) in menu" :key="index" nuxt="true" :to="item.link" active-class="detalles--text" class="titulo no-background-hover">
                 <v-list-item-title class="nav-item">
                     <v-icon class="pb-1">{{ item.icon }}</v-icon>
