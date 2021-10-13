@@ -23,6 +23,12 @@ export default {
   css: [
   ],
 
+  loading: {
+    color: '#2176AE',
+    height: '1vh',
+    rtl: false,
+    continuous: true
+  },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],
