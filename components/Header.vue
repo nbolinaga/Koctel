@@ -25,7 +25,7 @@ export default {
                 {
                     text: 'COCTELES',
                     icon: 'mdi-glass-cocktail',
-                    link: '/cocteles'},
+                    link: '/coctel'},
                 {
                     text: 'BARTENDER',
                     icon: 'mdi-account',
