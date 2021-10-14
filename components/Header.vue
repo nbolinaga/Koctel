@@ -3,7 +3,7 @@
         <LogoLargo fill="#9C3B3B" class="logoHeader"/>
         <v-spacer></v-spacer>
         <v-list class="d-flex flex-row" >
-            <v-list-item v-for="(item, index) in menu" :key="index" nuxt="true" :to="item.link" active-class="detalles--text" class="titulo no-background-hover">
+            <v-list-item v-for="(item, index) in menu" :key="index" nuxt :to="item.link" active-class="detalles--text" class="titulo no-background-hover">
                 <v-list-item-title class="nav-item">
                     <v-icon class="pb-1">{{ item.icon }}</v-icon>
                     {{ item.text }}
@@ -25,7 +25,7 @@ export default {
                 {
                     text: 'COCTELES',
                     icon: 'mdi-glass-cocktail',
-                    link: '/coctel'},
+                    link: '/cocteles'},
                 {
                     text: 'BARTENDER',
                     icon: 'mdi-account',
@@ -33,10 +33,10 @@ export default {
                 {
                     text: 'ALEATORIO',
                     icon: 'mdi-shuffle-variant ',
-                    link: '/aleatorio'}
+                    link: `/aleatorio`}
             ]
         }
-    },
+    }
 }
 </script>
 
@@ -50,5 +50,6 @@ export default {
     }
     .no-background-hover::before {
         background-color: transparent;
+        color: $links;
     }
 </style>
