@@ -1,7 +1,9 @@
 <template>
   <v-app :style="{background: $vuetify.theme.themes[theme].background}">>
     <Header />
-    <Nuxt class="mt-10"/>
+    <v-main>
+      <Nuxt class="mt-10" fluid/>
+    </v-main>
   </v-app>
 </template>
 
@@ -23,5 +25,9 @@
 .titulo{
   font-family: $titulos;
   font-weight: 600;
+}
+.textos{
+  font-family: $texto;
+  font-weight: 300;
 }
 </style>
