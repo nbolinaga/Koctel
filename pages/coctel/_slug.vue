@@ -8,11 +8,11 @@
                 </v-col>
                 <v-col cols="12" md="8" class="primario pt-10" height="70vh" >
                     <h2 class="secundario--text titulo d-flex justify-center">{{coctel.nombre}}</h2>
-                    <ul class="mx-0 px-0 my-2">
-                        <li v-for="ingrediente in coctel.ingredientes" :key="ingrediente" class="my-2 links--text textos d-flex justify-center">
-                            {{ingrediente.title}}
-                        </li>
-                    </ul>
+                    <v-list class="primario mx-0 px-0 my-2">
+                        <v-list-item v-for="ingrediente in coctel.ingredientes" :key="ingrediente._id"  class="my-n5 no-background-hover" nuxt :to="`/mixer/${ingrediente.id.current}`" :ripple="false">
+                            <v-list-item-title class="links--text d-flex justify-center textos">{{ingrediente.title}}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
                     <h3 class="secundario--text titulo d-flex justify-center mt-10">Preparacion</h3>
                     <p class="secundario--text textos px-12 mt-5 text-center">{{coctel.preparacion}}</p>
                 </v-col>
@@ -23,7 +23,7 @@
 
 <script>
 import { groq } from "@nuxtjs/sanity";
-const query = groq`*[slug.current == $slug] {_id, nombre, slug, "nombreAlcohol" : alcohol->nombre, ingredientes[]->{title}, "img": mainImage.asset->url, "preparacion": preparacion[0].children[0].text}`;
+const query = groq`*[slug.current == $slug] {_id, nombre, slug, "nombreAlcohol" : alcohol->nombre, ingredientes[]->{title, id}, "img": mainImage.asset->url, "preparacion": preparacion[0].children[0].text}`;
 
 export default {
     data() {
@@ -52,8 +52,5 @@ export default {
     .container {
         width: 100vw;
         margin: 0 auto;
-    }
-    .outline {
-        outline: 3px solid red;
     }
 </style>
