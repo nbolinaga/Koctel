@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="loading" v-if="loading">Cargando...</div>
+        <Loader v-if="loading"></Loader>
         <v-container class="ma-0 pa-12  primario" fluid v-if="!loading">
             <h2 class="secundario--text titulo d-flex justify-center">{{ingrediente.title}}</h2>
             <p class="secundario--text textos mt-5 text-center">{{ingrediente.description}}</p>
