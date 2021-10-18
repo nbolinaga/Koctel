@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <LogoCompleto class="logoCompleto mt-10" fill="#9C3B3B"/>
     <ListaCocteles/>
   </div>
 </template>
@@ -11,10 +10,5 @@
   .container {
     min-height: 30vh;
     margin: 0 auto;
-  }
-
-  .logoCompleto{
-    widows: auto;
-    height: 40vh;
   }
 </style>

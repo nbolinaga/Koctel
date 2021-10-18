@@ -9,14 +9,23 @@
                     {{ item.text }}
                 </v-list-item-title>
             </v-list-item>
+            <v-list-item active-class="detalles--text" class="titulo no-background-hover">
+                <v-list-item-title class="nav-item" @click="getAleatorio">
+                    <v-icon class="pb-1">{{ aleatorio.icon }}</v-icon>
+                    {{ aleatorio.text }}
+                </v-list-item-title>
+            </v-list-item>
         </v-list>
     </v-app-bar>
 </template>
 
 <script>
+import { groq } from "@nuxtjs/sanity";
+const query = groq`*[_type == "coctel"] {slug}`;
 export default {
     data() {
         return {
+            listaSlug: [],
             menu: [
                 {
                     text: 'INICIO',
@@ -30,14 +39,37 @@ export default {
                     text: 'BARTENDER',
                     icon: 'mdi-account',
                     link: '/bartender'},
-                {
-                    text: 'ALEATORIO',
-                    icon: 'mdi-shuffle-variant ',
-                    link: `/aleatorio`}
-            ]
+            ],
+            aleatorio: {
+                text: 'ALEATORIO',
+                icon: 'mdi-shuffle-variant'}
+            }
+        },
+        beforeMount(){
+            this.fetchData();
+        },
+        methods: {
+            fetchData() {
+            this.error = this.listaSlug = null;
+            this.loading = true;
+
+            this.$sanity.fetch(query).then(
+                (cocteles) => {
+                this.loading = false;
+                this.listaSlug = cocteles;
+                },
+                (error) => {
+                this.error = error;
+                }
+                );
+            },
+            getAleatorio() {
+                const random = Math.floor(Math.random() * this.listaSlug.length);
+                console.log(this.listaSlug[random].slug.current);
+                this.$router.push({ path: `/coctel/${this.listaSlug[random].slug.current}` })
+            }
         }
     }
-}
 </script>
 
 <style lang="scss">
@@ -47,6 +79,7 @@ export default {
     }
     .nav-item{
         font-size: 2vh;
+        cursor: pointer;
     }
     .no-background-hover::before {
         background-color: transparent;

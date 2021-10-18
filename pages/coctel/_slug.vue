@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="loading" v-if="loading">Cargando...</div>
+        <Loader v-if="loading"></Loader>
         <v-container class="ma-0 pa-0" fluid v-if="!loading">
             <v-row no-gutters class="ma-0 pa-0">
                 <v-col cols="12" md="4">
@@ -9,6 +9,9 @@
                 <v-col cols="12" md="8" class="primario pt-10" height="70vh" >
                     <h2 class="secundario--text titulo d-flex justify-center">{{coctel.nombre}}</h2>
                     <v-list class="primario mx-0 px-0 my-2">
+                        <v-list-item class="mt-2 mb-5 no-background-hover" nuxt :to="`/alcohol/${coctel.idAlcohol.current}`" :ripple="false">
+                             <v-list-item-title class="detalles--text d-flex justify-center textosDetalles secundario py-2">{{coctel.nombreAlcohol}}</v-list-item-title>
+                        </v-list-item>
                         <v-list-item v-for="ingrediente in coctel.ingredientes" :key="ingrediente._id"  class="my-n5 no-background-hover" nuxt :to="`/mixer/${ingrediente.id.current}`" :ripple="false">
                             <v-list-item-title class="links--text d-flex justify-center textos">{{ingrediente.title}}</v-list-item-title>
                         </v-list-item>
@@ -23,7 +26,7 @@
 
 <script>
 import { groq } from "@nuxtjs/sanity";
-const query = groq`*[slug.current == $slug] {_id, nombre, slug, "nombreAlcohol" : alcohol->nombre, ingredientes[]->{title, id}, "img": mainImage.asset->url, "preparacion": preparacion[0].children[0].text}`;
+const query = groq`*[slug.current == $slug] {_id, nombre, slug, "nombreAlcohol" : alcohol->nombre, "idAlcohol" : alcohol->id, ingredientes[]->{title, id}, "img": mainImage.asset->url, "preparacion": preparacion[0].children[0].text}`;
 
 export default {
     data() {
@@ -52,5 +55,8 @@ export default {
     .container {
         width: 100vw;
         margin: 0 auto;
+    }
+    .textosDetalles{
+        font-weight: 500;
     }
 </style>
