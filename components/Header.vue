@@ -65,7 +65,6 @@ export default {
             },
             getAleatorio() {
                 const random = Math.floor(Math.random() * this.listaSlug.length);
-                console.log(this.listaSlug[random].slug.current);
                 this.$router.push({ path: `/coctel/${this.listaSlug[random].slug.current}` })
             }
         }
