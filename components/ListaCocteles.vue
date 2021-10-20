@@ -1,30 +1,57 @@
 <template>
     <div class="pa-10">
         <Loader v-if="loading" />
-        <v-card class="my-5" v-for="coctel in cocteles" :key="coctel._id" :to="`/coctel/${coctel.slug.current}`">
-            <v-img :src="coctel.img" height="10vh" class="white--text align-end"> <v-card-title class="textos">{{coctel.nombre}}</v-card-title></v-img> 
-        </v-card>
+        <v-row class="d-flex justify-space-around">
+          <v-card v-for="coctel in cocteles" id="ingredientes" :key="coctel._id" class="my-5 secundario overflow-hidden" width="25vw" elevation="5" tile :to="`/coctel/${coctel.slug.current}`">
+            <v-card-title class="textos primario--text align-end titulo">{{coctel.nombre}}<v-icon v-if="coctel.categoria.includes('Sin Alcohol')" class="pb-1 detalles--text" right>{{sinAlcoholLogo}}</v-icon><v-icon  v-if="coctel.categoria.includes('Light')" class="pb-1 links--text" right>{{sinAzucar}}</v-icon></v-card-title>
+            <v-card-subtitle class="d-flex inline textos texto--text"><p v-for="alcohol in coctel.nombreAlcohol" :key="alcohol.nombre">{{alcohol}}</p></v-card-subtitle>
+            <v-spacer class="detalles"></v-spacer>
+            <v-img :src="coctel.img" width="100%" height="10vh" cover></v-img>
+          </v-card>
+        </v-row>
     </div>
 </template>
 
 <script>
 import { groq } from "@nuxtjs/sanity";
-const query = groq`*[_type == "coctel"] {_id, nombre, slug, "nombreAlcohol" : alcohol->nombre, ingredientes[]->{title}, "img": mainImage.asset->url, "preparacion": preparacion[0].children[0].text}`;
+import { mdiGlassCocktailOff, mdiAlphaLCircleOutline } from '@mdi/js';
+const query = groq`*[_type == "coctel"] | order(nombre asc) {_id, nombre, "nombreAlcohol": alcohol[]->nombre, slug, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
+const light = groq`*[_type == "coctel" && "Light" in categoria[]->titulo] | order(nombre asc) {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
+const sinAlcohol = groq`*[_type == "coctel" && "Sin Alcohol" in categoria[]->titulo] | order(nombre asc) {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
+const both = groq`*[_type == "coctel" && "Sin Alcohol" in categoria[]->titulo  && "Light" in categoria[]->titulo] | order(nombre asc) {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
 
 export default {
     props:{
-        ingredienteFiltro: {
-            type: String,
-            default: ''
-        },
-        alcoholFiltro: {
-            type: String,
-            default: ''
-        }
+      alcoholFiltro: {
+        type: String,
+        default: ''
+      },
+      ingredienteFiltro: {
+          type: String,
+          default: ''
+      },
+      sinAlcoholFiltro: {
+          type: Boolean,
+          default: false
+      },
+      lightFiltro: {
+        type: Boolean,
+        default: false
+      },
+      nombre:{
+        type: String,
+        default: null
+      },
+      pais:{
+        type: String,
+        default: ''
+      },
     },
   data() {
     return {
       cocteles: [],
+      sinAlcoholLogo: mdiGlassCocktailOff,
+      sinAzucar: mdiAlphaLCircleOutline
     };
   },
   beforeMount() {
@@ -32,10 +59,31 @@ export default {
   },
   methods:{
     fetchData() {
+      let toFetch = query;
       this.error = this.cocteles = null;
       this.loading = true;
-
-      this.$sanity.fetch(query).then(
+      if(this.lightFiltro === true){
+        toFetch = light;
+      }
+      if(this.sinAlcoholFiltro === true){
+        toFetch = sinAlcohol;
+      }
+      if(this.sinAlcoholFiltro === true && this.lightFiltro === true){
+        toFetch = both;
+      }
+      if(this.nombre !== null){
+        toFetch = groq`*[_type == "coctel" && nombre == "${this.nombre}"] {_id, nombre, "nombreAlcohol": alcohol[]->nombre, slug, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
+      }
+      if(this.pais !== ''){
+        toFetch = groq`*[_type == "coctel" && pais->nombre == "${this.pais}"] {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
+      }
+      if(this.ingredienteFiltro !== ''){
+        toFetch = groq`*[_type == "coctel" && "${this.ingredienteFiltro}" in ingredientes[]->title] {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo, "ingredientesNombres": ingredientes[]->title}`;
+      }
+      if(this.alcoholFiltro !== ''){
+        toFetch = groq`*[_type == "coctel" && "${this.alcoholFiltro}" in alcohol[]->nombre] {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
+      }
+      this.$sanity.fetch(toFetch).then(
         (cocteles) => {
           this.loading = false;
           this.cocteles = cocteles;
@@ -50,6 +98,12 @@ export default {
 
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
+p + p::before{
+  content: "-";
+  padding: 3px;
+}
+#ingredientes{
+  overflow-y: scroll;
+}
 </style>
