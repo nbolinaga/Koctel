@@ -1,14 +1,14 @@
 <template>
     <div>
          <Loader v-if="loading"></Loader>
-        <v-container class="ma-0 pa-0" fluid v-if="!loading">
-            <v-container class="ma-0 pa-12  primario" fluid v-if="!loading">
+        <v-container v-if="!loading" class="ma-0 pa-0" fluid>
+            <v-container v-if="!loading" class="ma-0 pa-12  primario" fluid>
             <h2 class="secundario--text titulo d-flex justify-center">{{alcohol.nombre}}</h2>
             <p class="secundario--text textos mt-5 text-center">{{alcohol.descripcion}}</p>
          </v-container>
-         <v-container class="ma-0 pt-10 background" fluid v-if="!loading">
+         <v-container v-if="!loading" class="ma-0 pt-10 background" fluid>
             <h2 class="texto--text titulo d-flex justify-center">TRAGOS CON ESTE ALCOHOL</h2>
-            <ListaCocteles/>
+            <ListaCocteles :alcohol-filtro="alcohol.nombre"/>
         </v-container>
         </v-container>
     </div>

@@ -1,13 +1,13 @@
 <template>
     <div>
         <Loader v-if="loading"></Loader>
-        <v-container class="ma-0 pa-12  primario" fluid v-if="!loading">
+        <v-container v-if="!loading" class="ma-0 pa-12  primario" fluid>
             <h2 class="secundario--text titulo d-flex justify-center">{{ingrediente.title}}</h2>
             <p class="secundario--text textos mt-5 text-center">{{ingrediente.description}}</p>
         </v-container>
-         <v-container class="ma-0 pt-10 background" fluid v-if="!loading">
+         <v-container v-if="!loading" class="ma-0 pt-10 background" fluid>
             <h2 class="texto--text titulo d-flex justify-center">TRAGOS CON ESTE INGREDIENTE</h2>
-            <ListaCocteles/>
+            <ListaCocteles :ingrediente-filtro="ingrediente.title"/>
         </v-container>
     </div>
 </template>
