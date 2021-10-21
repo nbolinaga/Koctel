@@ -34,11 +34,11 @@ export default {
                 {
                     text: 'COCTELES',
                     icon: 'mdi-glass-cocktail',
-                    link: '/cocteles'},
+                    link: '/#cocteles'},
                 {
                     text: 'BARTENDER',
                     icon: 'mdi-account',
-                    link: '/bartender'},
+                    link: '/#bartender'},
             ],
             aleatorio: {
                 text: 'ALEATORIO',
