@@ -17,7 +17,7 @@
                             <v-list-item-title class="links--text d-flex justify-center textos">{{coctel.cantidades[index+coctel.alcohol.length]}} - {{ingrediente.title}}</v-list-item-title>
                         </v-list-item>
                         <v-list-item class="mt-10 no-background-hover" nuxt :to="`/pais/${coctel.pais.id.current}`" :ripple="false">
-                            <v-list-item-title  id="pais" class="texto--text d-flex justify-center titulo">{{coctel.pais.nombre}}</v-list-item-title>
+                            <v-list-item-title  id="pais" class="background--text d-flex justify-center titulo">{{coctel.pais.nombre}}</v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-col>
