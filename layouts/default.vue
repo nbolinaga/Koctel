@@ -1,5 +1,5 @@
 <template>
-  <v-app :style="{background: $vuetify.theme.themes[theme].background}">>
+  <v-app :style="{background: $vuetify.theme.themes[theme].alt}">>
     <Header />
     <v-main>
       <Nuxt class="mt-10" fluid/>

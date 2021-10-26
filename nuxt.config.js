@@ -70,16 +70,15 @@ export default {
       dark: false,
       themes: {
         light: {
-          primario: '#9C3B3B',
-          secundario: '#FFFFFF',
-          links: '#CEB992',
-          texto: '#000501',
-          background: '#C2C2C2',
-          detalles: '#2176AE',
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3,
+          primario: '#FD3737', // Rojo
+          secundario: '#16B396', // Azul Marino
+          alt: '#0B1828', // Azul Oscuro
+          texto: '#EBFFFF', // Blanco
+
+          background: '#FFFFFF',
+          detalles: '#FFFFFF',
+          links: '#FFFFFF',
+
         }
       }
     }

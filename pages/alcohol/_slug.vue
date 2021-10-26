@@ -2,11 +2,11 @@
     <div>
          <Loader v-if="loading"></Loader>
         <v-container v-if="!loading" class="ma-0 pa-0" fluid>
-            <v-container v-if="!loading" class="ma-0 pa-12  primario" fluid>
-            <h2 class="secundario--text titulo d-flex justify-center">{{alcohol.nombre}}</h2>
-            <p class="secundario--text textos mt-5 text-center">{{alcohol.descripcion}}</p>
+            <v-container v-if="!loading" class="ma-0 pa-12  texto" fluid>
+            <h2 class="primario--text titulo d-flex justify-center">{{alcohol.nombre}}</h2>
+            <p class="alt--text textos mt-5 text-center">{{alcohol.descripcion}}</p>
          </v-container>
-         <v-container v-if="!loading" class="ma-0 pt-10 background" fluid>
+         <v-container v-if="!loading" class="ma-0 pt-10 alt" fluid>
             <h2 class="texto--text titulo d-flex justify-center">TRAGOS CON ESTE ALCOHOL</h2>
             <ListaCocteles :alcohol-filtro="alcohol.nombre"/>
         </v-container>
