@@ -1,15 +1,15 @@
 <template>
     <v-app-bar color="secundario" fixed flat class="overflow-hidden">
-        <LogoLargo fill="#9C3B3B" class="logoHeader"/>
+        <LogoLargo fill="#FFFFFF" class="logoHeader"/>
         <v-spacer></v-spacer>
-        <v-list class="d-flex flex-row" >
-            <v-list-item v-for="(item, index) in menu" :key="index" nuxt :to="item.link" active-class="detalles--text" class="titulo no-background-hover">
+        <v-list class="d-flex flex-row secundario" >
+            <v-list-item v-for="(item, index) in menu" :key="index" nuxt :to="item.link" active-class="alt--text" class="titulo texto--text no-background-hover">
                 <v-list-item-title class="nav-item">
-                    <v-icon class="pb-1">{{ item.icon }}</v-icon>
+                    <v-icon class="pb-1 ">{{ item.icon }}</v-icon>
                     {{ item.text }}
                 </v-list-item-title>
             </v-list-item>
-            <v-list-item active-class="detalles--text" class="titulo no-background-hover">
+            <v-list-item active-class="alt--text" class="titulo texto--text no-background-hover">
                 <v-list-item-title class="nav-item" @click="getAleatorio">
                     <v-icon class="pb-1">{{ aleatorio.icon }}</v-icon>
                     {{ aleatorio.text }}

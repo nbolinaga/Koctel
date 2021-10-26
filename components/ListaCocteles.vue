@@ -2,18 +2,18 @@
     <div class="pa-10">
         <Loader v-if="loading" />
         <v-row class="d-flex justify-space-around">
-          <h4 v-if="coctelesFiltrados.length == 0">No tienes los ingredientes necesarios para completar un coctel</h4>
-          <v-card v-for="coctel in coctelesFiltrados" id="ingredientes" :key="coctel._id" class="my-5 secundario overflow-hidden" width="25vw" elevation="5" tile :to="`/coctel/${coctel.slug.current}`">
-            <v-card-title class="textos primario--text align-end titulo">{{coctel.nombre}}<v-icon v-if="coctel.categoria.includes('Sin Alcohol')" class="pb-1 detalles--text" right>{{sinAlcoholLogo}}</v-icon><v-icon  v-if="coctel.categoria.includes('Light')" class="pb-1 links--text" right>{{sinAzucar}}</v-icon></v-card-title>
-            <v-card-subtitle class="d-flex inline textos texto--text"><p v-for="alcohol in coctel.nombreAlcohol" :key="alcohol.nombre">{{alcohol}}</p></v-card-subtitle>
+          <h4 v-if="coctelesFiltrados.length == 0 && !loading" class="textos primario--text">No se encontro ningun coctel</h4>
+          <v-card v-for="coctel in coctelesFiltrados" id="ingredientes" :key="coctel._id" class="my-5 texto overflow-hidden" width="25vw" elevation="5" tile :to="`/coctel/${coctel.slug.current}`">
+            <v-card-title class="textos primario--text align-end titulo">{{coctel.nombre}}<v-icon v-if="coctel.categoria.includes('Sin Alcohol')" class="pb-1 alt--text" right>{{sinAlcoholLogo}}</v-icon><v-icon  v-if="coctel.categoria.includes('Light')" class="pb-1 secundario--text" right>{{sinAzucar}}</v-icon></v-card-title>
+            <v-card-subtitle class="d-flex inline textos alt--text"><p v-for="alcohol in coctel.nombreAlcohol" :key="alcohol.nombre">{{alcohol}}</p></v-card-subtitle>
             <v-img :src="coctel.img" width="100%" height="10vh" cover></v-img>
           </v-card>
         </v-row>
         <v-row v-if="incompletos" class="d-flex justify-space-around">
-          <h2 class="texto--text titulo d-flex justify-center">TRAGOS QUE SOLO TE FALTAN ALGUNOS INGREDIENTES PARA PODER PREPARAR</h2>
-          <v-card v-for="coctel in coctelesIncompletos" id="ingredientes" :key="coctel[0]._id" class="my-5 secundario overflow-hidden" width="25vw" elevation="5" tile :to="`/coctel/${coctel[0].slug.current}`">
-            <v-card-title class="textos primario--text align-end titulo">{{coctel[0].nombre}}<v-icon v-if="coctel[0].categoria.includes('Sin Alcohol')" class="pb-1 detalles--text" right>{{sinAlcoholLogo}}</v-icon><v-icon  v-if="coctel[0].categoria.includes('Light')" class="pb-1 links--text" right>{{sinAzucar}}</v-icon></v-card-title>
-            <v-card-subtitle class="d-flex inline textos texto--text"><p v-for="alcohol in coctel[0].nombreAlcohol" :key="alcohol.nombre">{{alcohol}}</p></v-card-subtitle>
+          <h2 class="texto--text titulo d-flex justify-center my-10">TRAGOS QUE SOLO TE FALTAN ALGUNOS INGREDIENTES PARA PODER PREPARAR</h2>
+          <v-card v-for="coctel in coctelesIncompletos" id="ingredientes" :key="coctel[0]._id" class="my-5 text overflow-hidden" width="25vw" elevation="5" tile :to="`/coctel/${coctel[0].slug.current}`">
+            <v-card-title class="textos primario--text align-end titulo">{{coctel[0].nombre}}<v-icon v-if="coctel[0].categoria.includes('Sin Alcohol')" class="pb-1 alt--text" right>{{sinAlcoholLogo}}</v-icon><v-icon  v-if="coctel[0].categoria.includes('Light')" class="pb-1 secundario--text" right>{{sinAzucar}}</v-icon></v-card-title>
+            <v-card-subtitle class="d-flex inline textos alt--text"><p v-for="alcohol in coctel[0].nombreAlcohol" :key="alcohol.nombre">{{alcohol}}</p></v-card-subtitle>
             <p>{{coctel[1]}}</p>
             <v-img :src="coctel[0].img" width="100%" height="10vh" cover></v-img>
           </v-card>

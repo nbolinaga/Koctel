@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <LogoCompleto class="logoCompleto mt-10" fill="#9C3B3B"/>
-    <h2 id="subtitulo" class="titulo primario--text d-flex justify-center">TU BARTENDER DE BOLSILLO</h2>
-    <v-divider class="detalles my-12"></v-divider>
+    <LogoCompleto class="logoCompleto mt-10" fill="#FD3737"/>
+    <h2 id="subtitulo" class="titulo secundario--text d-flex justify-center">TU BARTENDER DE BOLSILLO</h2>
+    <v-divider class="texto my-12"></v-divider>
     <Cocteles id="cocteles"/>
-    <v-divider class="detalles my-12"></v-divider>
+    <v-divider class="texto my-12"></v-divider>
     <Bartender id="bartender"/>
   </div>
 </template>

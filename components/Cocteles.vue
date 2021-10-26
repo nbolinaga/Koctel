@@ -3,15 +3,15 @@
     <h2 class="titulo primario--text mb-8">Nuestros cocteles</h2>
     <p class="textos texto--text">A continuación encontrarás nuestra gran gama de cocteles de todas partes del mundo, donde te ofrecemos tragos desde los más populares hasta cocteles sin alcohol o sin azúcar. En Koctel siempre estamos actualizando nuestro catálogo de cocteles con los más nuevos</p>
     <div class="d-flex">
-      <v-switch v-model="lightFiltro" :label="`Solo Light`"></v-switch>
+      <v-switch v-model="lightFiltro" dark :label="`Solo Light`"></v-switch>
       <v-icon class="pb-2 primario--text" right>{{sinAzucar}}</v-icon>
     </div>
     <div class="d-flex">
-      <v-switch v-model="sinAlcohol" :label="`Sin Alcohol`"></v-switch>
+      <v-switch v-model="sinAlcohol" dark :label="`Sin Alcohol`"></v-switch>
       <v-icon class="pb-2 detalles--text" right>{{sinAlcoholLogo}}</v-icon>
     </div>
-    <v-autocomplete v-if="!loading" v-model="nombre" :label="`Buscar por Nombre`" :items="cocteles" item-text="nombre" clearable></v-autocomplete>
-    <v-autocomplete v-if="!loading" v-model="pais" :label="`Buscar por Pais`" :items="paises" item-text="nombre" clearable></v-autocomplete>
+    <v-autocomplete  v-if="!loading" v-model="nombre" dark :label="`Buscar por Nombre`" :items="cocteles" item-text="nombre" clearable></v-autocomplete>
+    <v-autocomplete  v-if="!loading" v-model="pais" dark :label="`Buscar por Pais`" :items="paises" item-text="nombre" clearable></v-autocomplete>
     <ListaCocteles :key="key" :light-filtro="lightFiltro" :sin-alcohol-filtro="sinAlcohol" :nombre="nombre" :pais="pais"/>
   </div>
 </template>
@@ -83,8 +83,12 @@ export default {
 }
 </script>
 <style lang="scss">
+@import '../assets/variables.scss';
   .container {
     min-height: 30vh;
     margin: 0 auto;
+  }
+  .v-input__slot .v-label{
+    color: whitesmoke !important;
   }
 </style>
