@@ -84,8 +84,8 @@
 
     </v-list>
     <v-container class="ma-0 pt-10 background" fluid v-if="!loading">
-            <h2 class="texto--text titulo d-flex justify-center">TRAGOS QUE PUEDES PREPARAR CON ESTOS INGREDIENTES</h2>
-            <ListaCocteles :key="key" :ingredientes="ingredientes"/>
+      <h2 class="texto--text titulo d-flex justify-center">TRAGOS QUE PUEDES PREPARAR CON ESTOS INGREDIENTES</h2>
+      <ListaCocteles :key="key" :ingredientes="ingredientes" :incompletos="true"/>
     </v-container>
   </div>
 </template>
