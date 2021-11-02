@@ -103,7 +103,6 @@ export default {
                 this.snackbar = true;
                 }).catch(e => {
                 this.$snotify.error(e.message)
-                console.log(e)
                 })
             },
             logOut(){
