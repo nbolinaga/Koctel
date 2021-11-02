@@ -99,12 +99,24 @@ export default {
                 this.provider = new this.$fireModule.auth.GoogleAuthProvider()
                 this.$fireModule.auth().signInWithPopup(this.provider).then(result => {
                 localStorage.setItem('user', JSON.stringify(result.user))
-                this.user = JSON.stringify(result.user);
+                this.user = result.user;
                 this.snackbar = true;
                 this.$router.push('/')
+                this.setUser();
                 }).catch(e => {
                 this.$snotify.error(e.message)
                 })
+            },
+            async setUser(){
+                const newUser = {
+                    ratings: {},
+                    favorites: []
+                }
+                const id = this.user.uid
+                console.log(id)
+                const usersCollection = this.$fireModule.firestore().collection('users');
+                const user = await usersCollection.doc(id).get();
+                return user.exists ? user.data() : usersCollection.doc(id).set(newUser);
             },
             logOut(){
                 localStorage.setItem('user', null)
