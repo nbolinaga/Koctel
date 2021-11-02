@@ -51,6 +51,22 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: "AIzaSyDsaYcUuUoIC4QWYZKr-g8xWzDwZ5lHGgM",
+          authDomain: "koctel-2021.firebaseapp.com",
+          projectId: "koctel-2021",
+          storageBucket: "koctel-2021.appspot.com",
+          messagingSenderId: "627115628793",
+          appId: "1:627115628793:web:a3fa09cf6b467000876a28"
+        },
+        services: {
+          auth: true 
+        }
+      }
+    ]
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
