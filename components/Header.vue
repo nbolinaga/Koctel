@@ -18,7 +18,7 @@
             <v-list-item v-if="user != null" active-class="alt--text" class="titulo texto--text no-background-hover">
                 <v-list-item-title class="nav-item">
                     <v-icon class="pb-1">{{ perfil.icon }}</v-icon>
-                    {{ user.displayName.toUpperCase()}}
+                    {{ perfil.text }}
                 </v-list-item-title>
             </v-list-item>
         </v-list>
@@ -63,6 +63,7 @@ export default {
                 icon: 'mdi-shuffle-variant'},
 
             perfil:{
+                text: 'PERFIL',
                 icon: 'mdi-account-circle'}
             }
         },
@@ -99,8 +100,8 @@ export default {
                 this.$fireModule.auth().signInWithPopup(this.provider).then(result => {
                 localStorage.setItem('user', JSON.stringify(result.user))
                 this.user = JSON.stringify(result.user);
-                this.$router.push('/')
                 this.snackbar = true;
+                this.$router.push('/')
                 }).catch(e => {
                 this.$snotify.error(e.message)
                 })
