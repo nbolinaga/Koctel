@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar color="secundario" fixed flat class="overflow-hidden">
+    <v-app-bar :key="key" color="secundario" fixed flat class="overflow-hidden">
         <LogoLargo fill="#FFFFFF" class="logoHeader"/>
         <v-spacer></v-spacer>
         <v-list class="d-flex flex-row secundario" >
@@ -15,7 +15,20 @@
                     {{ aleatorio.text }}
                 </v-list-item-title>
             </v-list-item>
+            <v-list-item v-if="user != null" active-class="alt--text" class="titulo texto--text no-background-hover">
+                <v-list-item-title class="nav-item">
+                    <v-icon class="pb-1">{{ perfil.icon }}</v-icon>
+                    {{ user.displayName.toUpperCase()}}
+                </v-list-item-title>
+            </v-list-item>
         </v-list>
+        <v-spacer></v-spacer>
+        <v-btn  v-if="user == null" fab color="primario" x-small @click="googleSignIn" ><v-icon class="white--text">mdi-google</v-icon></v-btn>
+        <v-btn  v-if="user != null" color="primario" class="white--text" small @click="logOut" >Salir <v-icon class="white--text" right>mdi-logout</v-icon></v-btn>
+        <v-snackbar v-model="snackbar" timeout="1000" absolute bottom color="alt" tile>
+            <h5 v-if="user != null" text-center>Ingresado Exitosamente</h5>
+            <h5 v-else text-center>Desconectado Exitosamente</h5>
+        </v-snackbar>
     </v-app-bar>
 </template>
 
@@ -25,28 +38,42 @@ const query = groq`*[_type == "coctel"] {slug}`;
 export default {
     data() {
         return {
+            snackbar: false,
+            user: null,
             listaSlug: [],
             menu: [
                 {
                     text: 'INICIO',
                     icon: 'mdi-home',
-                    link: '/'},
+                    link: '/',
+                    show: true},
                 {
                     text: 'COCTELES',
                     icon: 'mdi-glass-cocktail',
-                    link: '/#cocteles'},
+                    link: '/#cocteles',
+                    show: true},
                 {
                     text: 'BARTENDER',
                     icon: 'mdi-account',
-                    link: '/#bartender'},
+                    link: '/#bartender',
+                    show: true}   
             ],
             aleatorio: {
                 text: 'ALEATORIO',
-                icon: 'mdi-shuffle-variant'}
+                icon: 'mdi-shuffle-variant'},
+
+            perfil:{
+                icon: 'mdi-account-circle'}
+            }
+        },
+        watch:{
+            user(val){
+                this.key = !this.key;
             }
         },
         beforeMount(){
             this.fetchData();
+            localStorage.getItem('user') ? this.user = JSON.parse(localStorage.getItem('user')) : this.user = null;
         },
         methods: {
             fetchData() {
@@ -66,6 +93,24 @@ export default {
             getAleatorio() {
                 const random = Math.floor(Math.random() * this.listaSlug.length);
                 this.$router.push({ path: `/coctel/${this.listaSlug[random].slug.current}` })
+            },
+            googleSignIn() {
+                this.provider = new this.$fireModule.auth.GoogleAuthProvider()
+                this.$fireModule.auth().signInWithPopup(this.provider).then(result => {
+                localStorage.setItem('user', JSON.stringify(result.user))
+                this.user = JSON.stringify(result.user);
+                this.$router.push('/')
+                this.snackbar = true;
+                }).catch(e => {
+                this.$snotify.error(e.message)
+                console.log(e)
+                })
+            },
+            logOut(){
+                localStorage.setItem('user', null)
+                this.user = null;
+                this.snackbar = true;
+                this.$router.push('/')
             }
         }
     }
