@@ -48,6 +48,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
+
     '@nuxtjs/pwa',
     [
       '@nuxtjs/firebase',
@@ -61,7 +62,7 @@ export default {
           appId: "1:627115628793:web:a3fa09cf6b467000876a28"
         },
         services: {
-          auth: true 
+          auth: true,
         }
       }
     ]
