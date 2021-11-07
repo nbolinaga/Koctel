@@ -16,7 +16,7 @@
                 </v-list-item-title>
             </v-list-item>
             <v-list-item v-if="user != null" active-class="alt--text" class="titulo texto--text no-background-hover">
-                <v-list-item-title class="nav-item">
+                <v-list-item-title class="nav-item" @click="getPerfil">
                     <v-icon class="pb-1">{{ perfil.icon }}</v-icon>
                     {{ perfil.text }}
                 </v-list-item-title>
@@ -95,33 +95,50 @@ export default {
                 const random = Math.floor(Math.random() * this.listaSlug.length);
                 this.$router.push({ path: `/coctel/${this.listaSlug[random].slug.current}` })
             },
+            getPerfil() {
+                this.$router.push({ path: `/perfil/${this.user.uid}` })
+            },
             googleSignIn() {
                 this.provider = new this.$fireModule.auth.GoogleAuthProvider()
                 this.$fireModule.auth().signInWithPopup(this.provider).then(result => {
-                localStorage.setItem('user', JSON.stringify(result.user))
+                localStorage.setItem('user', JSON.stringify(result.user.uid))
                 this.user = result.user;
                 this.snackbar = true;
+                this.mutate();
                 this.$router.push('/')
-                this.setUser();
                 }).catch(e => {
                 this.$snotify.error(e.message)
                 })
             },
-            async setUser(){
-                const newUser = {
-                    ratings: {},
-                    favorites: []
-                }
-                const id = this.user.uid
-                const usersCollection = this.$fireModule.firestore().collection('users');
-                const user = await usersCollection.doc(id).get();
-                return user.exists ? user.data() : usersCollection.doc(id).set(newUser);
-            },
             logOut(){
-                localStorage.setItem('user', null)
+                localStorage.clear();
                 this.user = null;
                 this.snackbar = true;
                 this.$router.push('/')
+                
+            },
+            mutate(){
+                const mutations = [{
+                    createIfNotExists: {
+                        _id: this.user.uid,
+                        id: this.user.uid,
+                        _type: 'user',
+                        name: this.user.displayName,
+                        imageUrl: this.user.photoURL,
+                    }
+                    }]
+
+                    fetch(`https://s25qt0j9.api.sanity.io/v2021-06-07/data/mutate/production`, {
+                    method: 'post',
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer skGixis99l1hlaib5goQrVR7h2n61F2CJU12bZxyyBUvczzlDlHZM5gWUVyFdbQnlfTSUBuEkV6B54tPHtQL61ipQMk4694KUbaGzuulRc6sVWbhL5yRb5mV6HKD0FsiuIp8o3GSUdF0AbBVv4jL8OGZlflEbpRVnTXzQBsDWghfJwxoCukV`
+                    },
+                    body: JSON.stringify({mutations})
+                    })
+                    .then(response => response.json())
+                    .then(result => console.log(result))
+                    .catch(error => console.error(error))
             }
         }
     }
