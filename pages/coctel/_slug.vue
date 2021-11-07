@@ -4,10 +4,15 @@
         <v-container v-if="!loading" class="ma-0 pa-0" fluid>
             <v-row no-gutters class="ma-0 pa-0" >
                 <v-col cols="12" md="4">
-                    <v-img :src="coctel.img" alt="" height="100%" width="auto" cover/>
+                    <v-img :src="coctel.img" alt="" height="100%" width="auto" cover>
+                        <v-btn v-if="user != null" fab big  class="ma-5 float-right" @click.native.stop="like()">
+                            <v-icon v-if="liked" class="primario--text">mdi-heart</v-icon>
+                            <v-icon v-else class=" primario--text">mdi-heart-outline</v-icon>
+                        </v-btn>
+                    </v-img>
                 </v-col>
                 <v-col cols="12" md="8" class="texto pt-10">
-                    <!-- <v-rating v-model="rating" half-increments background-color="secundario lighten-3" color="secundario" small class="d-flex justify-center"></v-rating> -->
+                    <v-rating v-model="rating" readonly half-increments background-color="secundario lighten-3" color="secundario" small class="d-flex justify-center"></v-rating>
                     <h2 class="primario--text titulo d-flex justify-center">{{coctel.nombre}}</h2>
                     <v-list class="texto mx-0 px-0 my-2">
                         <v-list-item v-for="(alcohol, index) in coctel.alcohol" :key="alcohol.id" class="my-n5 mx-12 no-background-hover" nuxt :to="`/alcohol/${alcohol.id.current}`" :ripple="false">
@@ -20,7 +25,7 @@
                         <v-list-item class="mt-10 no-background-hover" nuxt :to="`/pais/${coctel.pais.id.current}`" :ripple="false">
                             <v-list-item-title  id="pais" class="primario--text d-flex justify-center titulo">{{coctel.pais.nombre}}</v-list-item-title>
                         </v-list-item>
-                        <v-list-item class="d-flex justify-center mt-10 mb-5">
+                        <v-list-item v-if="user != null" class="d-flex justify-center mt-10 mb-5">
                             <v-rating v-model="rating" half-increments background-color="alt lighten-3" color="alt" large></v-rating>
                         </v-list-item>
                         
@@ -43,21 +48,36 @@ export default {
             coctel: {},
             loading: true,
             rating: 5,
+            user: null,
+            liked: false
         }
     },
     beforeMount() {
+        localStorage.getItem('user') ? this.user = JSON.parse(localStorage.getItem('user')) : this.user = null;
         this.error = this.post = null;
 
       this.$sanity.fetch(query, { slug: this.$route.params.slug }).then(
         (coctel) => {
           this.loading = false;
           this.coctel = coctel[0];
+          this.liked = localStorage.getItem(this.coctel.slug.current);
         },
         (error) => {
           this.error = error;
         }
       );
+      
     },
+    methods: {
+        like(){
+            this.liked = !this.liked;
+            if(this.liked){
+                localStorage.setItem(this.coctel.slug.current, true);
+            }else{
+                localStorage.removeItem(this.coctel.slug.current);
+            }
+        }
+    }
 }
 </script>
 
