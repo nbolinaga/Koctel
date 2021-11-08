@@ -139,7 +139,6 @@ export default {
       this.ingredientes = this.ingredientes.filter(ingrediente => ingrediente.id !== id)
     },
     fetchData() {
-      // this.error = this.mixers = null;
       this.loading = true;
       this.$sanity.fetch(query).then(
         (mixers) => {
@@ -152,7 +151,6 @@ export default {
       );
     },
     fetchData2() {
-      // this.error = this.alcoholes = null;
       this.loading = true;
       this.$sanity.fetch(query2).then(
         (alcoholes) => {

@@ -23,6 +23,7 @@
             </v-list-item>
         </v-list>
         <v-spacer></v-spacer>
+        <v-btn @click="test()">test</v-btn>
         <v-btn  v-if="user == null" fab color="primario" x-small @click="googleSignIn" ><v-icon class="white--text">mdi-google</v-icon></v-btn>
         <v-btn  v-if="user != null" color="primario" class="white--text" small @click="logOut" >Salir <v-icon class="white--text" right>mdi-logout</v-icon></v-btn>
         <v-snackbar v-model="snackbar" timeout="1000" absolute bottom color="alt" tile>
@@ -104,7 +105,8 @@ export default {
                 localStorage.setItem('user', JSON.stringify(result.user.uid))
                 this.user = result.user;
                 this.snackbar = true;
-                this.mutate();
+                this.$fire.firestore.collection("favoritos").doc(this.user.id).set({
+                favoritos: []})
                 this.$router.push('/')
                 }).catch(e => {
                 this.$snotify.error(e.message)
@@ -115,8 +117,9 @@ export default {
                 this.user = null;
                 this.snackbar = true;
                 this.$router.push('/')
-                
+                window.location.reload(true);
             },
+
             mutate(){
                 const mutations = [{
                     createIfNotExists: {
@@ -125,6 +128,7 @@ export default {
                         _type: 'user',
                         name: this.user.displayName,
                         imageUrl: this.user.photoURL,
+                        favoritos: [],
                     }
                     }]
 
@@ -136,9 +140,11 @@ export default {
                     },
                     body: JSON.stringify({mutations})
                     })
-                    .then(response => response.json())
-                    .then(result => console.log(result))
-                    .catch(error => console.error(error))
+                    .then(response => {
+                        response.json()
+                        window.location.reload(true);
+                        })
+                    
             }
         }
     }

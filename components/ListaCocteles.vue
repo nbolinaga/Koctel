@@ -3,11 +3,11 @@
         <Loader v-if="loading" />
         <v-row class="d-flex justify-space-around">
           <h4 v-if="coctelesFiltrados.length == 0 && !loading" class="textos primario--text">No se encontro ningun coctel</h4>
-          <coctelCard v-for="coctel in coctelesFiltrados" :key="coctel._id" :coctel="coctel"/>
+          <coctelCard v-for="coctel in coctelesFiltrados" :key="coctel._id" :coctel="coctel" :userprop="user"/>
         </v-row>
         <v-row v-if="incompletos" class="d-flex justify-space-around">
           <h2 class="texto--text titulo d-flex justify-center my-10">TRAGOS QUE SOLO TE FALTAN ALGUNOS INGREDIENTES PARA PODER PREPARAR</h2>
-          <coctelCard v-for="coctel in coctelesIncompletos" :key="coctel._id" :coctel="coctel[0]"/>
+          <coctelCard v-for="coctel in coctelesIncompletos && !loading" :key="coctel._id" :coctel="coctel[0]" :userprop="user"/>
         </v-row>
     </div>
 </template>
@@ -63,25 +63,24 @@ export default {
       coctelesIncompletos: [],
       userID: null,
       user: null,
+      loading: false
     };
   },
-  beforeMount() {
-    this.fetchData();
-  },
-  mounted(){
+  beforeMount(){
     localStorage.getItem('user') ? this.userID = JSON.parse(localStorage.getItem('user')) : this.userID = null;
     if(this.userID != null){
       this.fetchUserData();
-      console.log("logged");
     }
+  },
+  mounted(){
+    this.fetchData();
   },
   methods:{
     fetchUserData(){
       const query = groq`*[_id == '${this.userID}']{...}`;
-      this.$sanity.fetch(query).then(user => {
-        this.user = user;
-        console.log(this.user);
-      });
+        this.$sanity.fetch(query).then(user => {
+          this.user = user[0];
+        });
     },
     fetchData() {
       let toFetch = query;

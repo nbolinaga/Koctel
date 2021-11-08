@@ -63,6 +63,7 @@ export default {
         },
         services: {
           auth: true,
+          firestore: true
         }
       }
     ]

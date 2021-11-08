@@ -20,6 +20,10 @@ export default {
     props:{coctel: {
         type: Object,
         default: null
+      },
+      userprop: {
+        type: Object,
+        default: null
       }
     },
     data() {
@@ -28,11 +32,11 @@ export default {
             user: null,
             sinAlcoholLogo: mdiGlassCocktailOff,
             sinAzucar: mdiAlphaLCircleOutline,
-            liked: false
+            liked: false,
         }
     },
-    beforeMount(){
-        localStorage.getItem('user') ? this.user = JSON.parse(localStorage.getItem('user')) : this.user = null;
+    mounted(){
+        this.user = this.userprop
         this.liked = localStorage.getItem(this.coctel.slug.current)
     },
     methods:{
@@ -43,11 +47,67 @@ export default {
             this.liked = !this.liked;
             if(this.liked){
                 localStorage.setItem(this.coctel.slug.current, true);
+                this.mutateAdd();
             }else{
                 localStorage.removeItem(this.coctel.slug.current);
+                this.mutateDelete();
             }
+        },
+        mutateAdd(){
+
+            fetch(`https://s25qt0j9.api.sanity.io/v2021-06-07/data/mutate/production`, {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer skGixis99l1hlaib5goQrVR7h2n61F2CJU12bZxyyBUvczzlDlHZM5gWUVyFdbQnlfTSUBuEkV6B54tPHtQL61ipQMk4694KUbaGzuulRc6sVWbhL5yRb5mV6HKD0FsiuIp8o3GSUdF0AbBVv4jL8OGZlflEbpRVnTXzQBsDWghfJwxoCukV`
+            },
+            body: JSON.stringify({
+                "mutations": [
+                    {
+                    "patch": {
+                        "id": `${this.user.id}`,
+                        "insert": {
+                            "after": "favoritos[-1]",
+                            "items": [
+                                {
+                                "_type": "reference",
+                                "_ref": `${this.coctel._id}`
+                                }
+                            ]
+                            }
+                        }
+                    }
+                ]
+            })
+            })
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.error(error))
+        },
+        mutateDelete(){
+            fetch(`https://s25qt0j9.api.sanity.io/v2021-06-07/data/mutate/production`, {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer skGixis99l1hlaib5goQrVR7h2n61F2CJU12bZxyyBUvczzlDlHZM5gWUVyFdbQnlfTSUBuEkV6B54tPHtQL61ipQMk4694KUbaGzuulRc6sVWbhL5yRb5mV6HKD0FsiuIp8o3GSUdF0AbBVv4jL8OGZlflEbpRVnTXzQBsDWghfJwxoCukV`
+            },
+            body: JSON.stringify({
+                "mutations": [
+                    {
+                    "patch": {
+                        "id": `${this.user.id}`,
+                        "unset": ["favoritos"]
+                
+                        }
+                    }
+                ]
+            })
+            })
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.error(error))
         }
-    }
+    }    
 }
 </script>
 
