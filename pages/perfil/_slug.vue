@@ -2,13 +2,10 @@
     <div>
         <Loader v-if="loading"></Loader>
         <v-container v-if="!loading" class="ma-0 pa-12  texto" fluid>
-            <img :src="user.imageUrl" alt="" class="outline mt-5">
-            <h2 class="secundario--text titulo d-flex justify-center">{{user.name}}</h2>
-            <h2 class="primario--text titulo d-flex justify-center my-10">Tus cocteles favoritos</h2>
-            <v-row class="d-flex justify-space-around alt mt-15">
-                <coctelCard v-for="coctel in user.favoritos" :key="coctel._id" :coctel="coctel" :userprop="user"/>
-            </v-row>
-            
+            <img :src="user.photoURL" alt="" class="outline mt-5">
+            <h2 class="secundario--text titulo d-flex justify-center">{{user.displayName}}</h2>
+            <h2 class="primario--text titulo d-flex justify-center mt-10">Tus cocteles favoritos</h2>
+            <CoctelesFavoritos :key="key" filtro-favoritos="true" :coctelesprorp="coctelesFavoritos"/>
         </v-container>
     </div>
 </template>
@@ -16,8 +13,10 @@
 <script>
 import { groq } from "@nuxtjs/sanity";
 import { mdiGlassCocktailOff, mdiAlphaLCircleOutline } from '@mdi/js';
+const query = groq`*[_type == "coctel"] | order(nombre asc) {_id, nombre, "nombreAlcohol": alcohol[]->nombre, slug, "img": mainImage.asset->url, "categoria": categoria[]->titulo, ingredientes[]->{title, id}}`;
 
 export default {
+    
     data() {
         return {
             loading: true,
@@ -25,23 +24,50 @@ export default {
             user: null,
             sinAlcoholLogo: mdiGlassCocktailOff,
             sinAzucar: mdiAlphaLCircleOutline,
+            coctelesFavoritos: []
         }
     },
-    beforeMount() {
-      localStorage.getItem('user') ? this.userID = JSON.parse(localStorage.getItem('user')) : this.userID = null;
-      this.error = this.user = null;
-      const query = groq`*[_id == '${this.userID}']{..., favoritos[]->{..., "img": mainImage.asset->url, "nombreAlcohol": alcohol[]->nombre,  "categoria": categoria[]->titulo}}`;
+    watch: {
+        user(){
+        this.fetchData();
+        }
+    },
+    beforeMount(){
+        localStorage.getItem('user') ? this.userID = JSON.parse(localStorage.getItem('user')) : this.userID = null;
+        if(this.userID != null){
+        this.fetchUserData();
+        } else {
+        this.fetchData();
+        }
+        
+    },
+    methods:{
+    fetchUserData(){
+      this.$fire.firestore.collection('users').doc(`${this.userID}`).get().then(doc => {
+        this.user = doc.data();
+      });
+    },
+    fetchData() {
+      this.error = this.cocteles = null;
+      this.loading = false;
+
       this.$sanity.fetch(query).then(
-        (user) => {
-          this.loading = false;
-          this.user = user[0];
-        },
-        (error) => {
+        (cocteles) => {
+          cocteles.forEach(coctel => {
+              console.log(coctel.slug.current);
+              if(this.user.favoritos.includes(coctel.slug.current)){
+                console.log(coctel.slug.current);
+                this.coctelesFavoritos.push(coctel);
+              }
+          })
+            this.loading = false;
+          })
+        .catch(error => {
           this.error = error;
         }
       );
     },
-}
+}}
 </script>
 
 <style lang="scss">

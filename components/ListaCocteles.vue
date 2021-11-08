@@ -66,21 +66,25 @@ export default {
       loading: false
     };
   },
+  watch: {
+    user(){
+      this.fetchData();
+    }
+  },
   beforeMount(){
     localStorage.getItem('user') ? this.userID = JSON.parse(localStorage.getItem('user')) : this.userID = null;
     if(this.userID != null){
       this.fetchUserData();
+    } else {
+      this.fetchData();
     }
-  },
-  mounted(){
-    this.fetchData();
+    
   },
   methods:{
     fetchUserData(){
-      const query = groq`*[_id == '${this.userID}']{...}`;
-        this.$sanity.fetch(query).then(user => {
-          this.user = user[0];
-        });
+      this.$fire.firestore.collection('users').doc(`${this.userID}`).get().then(doc => {
+        this.user = doc.data();
+      });
     },
     fetchData() {
       let toFetch = query;

@@ -36,8 +36,13 @@ export default {
         }
     },
     mounted(){
-        this.user = this.userprop
-        this.liked = localStorage.getItem(this.coctel.slug.current)
+        if(this.userprop != null){
+            this.user = this.userprop
+            if(this.user.favoritos.includes(this.coctel.slug.current)){
+                this.liked = true
+            }
+        }
+        
     },
     methods:{
         goTo(url){
@@ -46,67 +51,19 @@ export default {
         like(){
             this.liked = !this.liked;
             if(this.liked){
+                this.user.favoritos.push(this.coctel.slug.current);
                 localStorage.setItem(this.coctel.slug.current, true);
-                this.mutateAdd();
+                this.$fire.firestore.collection("users").doc(`${this.user.uid}`).update({
+                    favoritos: this.user.favoritos
+                })
             }else{
+                this.user.favoritos.splice(this.user.favoritos.indexOf(`${this.coctel.slug.current}`), 1);
                 localStorage.removeItem(this.coctel.slug.current);
-                this.mutateDelete();
+                this.$fire.firestore.collection("users").doc(`${this.user.uid}`).update({
+                    favoritos: this.user.favoritos
+                })
             }
         },
-        mutateAdd(){
-
-            fetch(`https://s25qt0j9.api.sanity.io/v2021-06-07/data/mutate/production`, {
-            method: 'post',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer skGixis99l1hlaib5goQrVR7h2n61F2CJU12bZxyyBUvczzlDlHZM5gWUVyFdbQnlfTSUBuEkV6B54tPHtQL61ipQMk4694KUbaGzuulRc6sVWbhL5yRb5mV6HKD0FsiuIp8o3GSUdF0AbBVv4jL8OGZlflEbpRVnTXzQBsDWghfJwxoCukV`
-            },
-            body: JSON.stringify({
-                "mutations": [
-                    {
-                    "patch": {
-                        "id": `${this.user.id}`,
-                        "insert": {
-                            "after": "favoritos[-1]",
-                            "items": [
-                                {
-                                "_type": "reference",
-                                "_ref": `${this.coctel._id}`
-                                }
-                            ]
-                            }
-                        }
-                    }
-                ]
-            })
-            })
-            .then(response => response.json())
-            .then(result => console.log(result))
-            .catch(error => console.error(error))
-        },
-        mutateDelete(){
-            fetch(`https://s25qt0j9.api.sanity.io/v2021-06-07/data/mutate/production`, {
-            method: 'post',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer skGixis99l1hlaib5goQrVR7h2n61F2CJU12bZxyyBUvczzlDlHZM5gWUVyFdbQnlfTSUBuEkV6B54tPHtQL61ipQMk4694KUbaGzuulRc6sVWbhL5yRb5mV6HKD0FsiuIp8o3GSUdF0AbBVv4jL8OGZlflEbpRVnTXzQBsDWghfJwxoCukV`
-            },
-            body: JSON.stringify({
-                "mutations": [
-                    {
-                    "patch": {
-                        "id": `${this.user.id}`,
-                        "unset": ["favoritos"]
-                
-                        }
-                    }
-                ]
-            })
-            })
-            .then(response => response.json())
-            .then(result => console.log(result))
-            .catch(error => console.error(error))
-        }
     }    
 }
 </script>
