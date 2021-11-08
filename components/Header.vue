@@ -23,7 +23,6 @@
             </v-list-item>
         </v-list>
         <v-spacer></v-spacer>
-        <v-btn @click="test()">test</v-btn>
         <v-btn  v-if="user == null" fab color="primario" x-small @click="googleSignIn" ><v-icon class="white--text">mdi-google</v-icon></v-btn>
         <v-btn  v-if="user != null" color="primario" class="white--text" small @click="logOut" >Salir <v-icon class="white--text" right>mdi-logout</v-icon></v-btn>
         <v-snackbar v-model="snackbar" timeout="1000" absolute bottom color="alt" tile>
@@ -102,12 +101,17 @@ export default {
             googleSignIn() {
                 this.provider = new this.$fireModule.auth.GoogleAuthProvider()
                 this.$fireModule.auth().signInWithPopup(this.provider).then(result => {
-                localStorage.setItem('user', JSON.stringify(result.user.uid))
-                this.user = result.user;
-                this.snackbar = true;
-                this.$fire.firestore.collection("favoritos").doc(this.user.id).set({
-                favoritos: []})
-                this.$router.push('/')
+                    this.user = result.user;
+                    localStorage.setItem('user', JSON.stringify(result.user.uid))
+                    this.snackbar = true;
+                    this.$fire.firestore.collection('users').doc(`${result.user.uid}`).get().then(doc => {
+                        if(!doc.exists){
+                            this.createUser()
+                        }
+                        else {
+                            this.getPerfil();
+                        }
+                    });
                 }).catch(e => {
                 this.$snotify.error(e.message)
                 })
@@ -116,35 +120,23 @@ export default {
                 localStorage.clear();
                 this.user = null;
                 this.snackbar = true;
-                this.$router.push('/')
-                window.location.reload(true);
+                this.$router.push('/#top').then(()=>{
+                     window.location.reload(true);
+                })
             },
-
-            mutate(){
-                const mutations = [{
-                    createIfNotExists: {
-                        _id: this.user.uid,
-                        id: this.user.uid,
-                        _type: 'user',
-                        name: this.user.displayName,
-                        imageUrl: this.user.photoURL,
-                        favoritos: [],
-                    }
-                    }]
-
-                    fetch(`https://s25qt0j9.api.sanity.io/v2021-06-07/data/mutate/production`, {
-                    method: 'post',
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer skGixis99l1hlaib5goQrVR7h2n61F2CJU12bZxyyBUvczzlDlHZM5gWUVyFdbQnlfTSUBuEkV6B54tPHtQL61ipQMk4694KUbaGzuulRc6sVWbhL5yRb5mV6HKD0FsiuIp8o3GSUdF0AbBVv4jL8OGZlflEbpRVnTXzQBsDWghfJwxoCukV`
-                    },
-                    body: JSON.stringify({mutations})
-                    })
-                    .then(response => {
-                        response.json()
-                        window.location.reload(true);
-                        })
-                    
+            createUser(){
+                this.$fire.firestore.collection("users").doc(`${this.user.uid}`).set(
+                    {
+                    uid: this.user.uid,
+                    email: this.user.email,
+                    displayName: this.user.displayName,
+                    photoURL: this.user.photoURL,
+                    favoritos: [],
+                    ratings: [{}]
+                }
+                ).then(() => {
+                    window.location.reload(true);
+                });
             }
         }
     }
