@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <LogoCompleto class="logoCompleto mt-10" fill="#FD3737"/>
+  <div id="top" class="container" >
+    <LogoCompleto class="logoCompleto mt-10" fill="#FD3737" />
     <h2 id="subtitulo" class="titulo secundario--text d-flex justify-center">TU BARTENDER DE BOLSILLO</h2>
     <v-divider class="texto my-12"></v-divider>
     <Cocteles id="cocteles"/>
@@ -21,7 +21,7 @@
     widows: auto;
     height: 40vh;
   }
-  #cocteles, #bartender{
+  #cocteles, #bartender, #top{
     padding-top: 70px;
     margin-top: -70px;
   }
