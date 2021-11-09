@@ -1,6 +1,6 @@
 <template>
 <v-card class="my-5 texto overflow-hidden" width="25vw" elevation="5" tile click.capture @click="goTo(`/coctel/${coctel.slug.current}`)">
-    <v-card-title class="textos primario--text align-end titulo">{{coctel.nombre}}
+    <v-card-title class="textos primario--text align-end titulo" truncate>{{coctel.nombre}}
         <v-icon v-if="coctel.categoria.includes('Sin Alcohol')" class="pb-1 alt--text" right>{{sinAlcoholLogo}}</v-icon>
         <v-icon  v-if="coctel.categoria.includes('Light')" class="pb-1 secundario--text" right>{{sinAzucar}}</v-icon>
         <v-spacer></v-spacer>
@@ -28,11 +28,22 @@ export default {
     },
     data() {
         return {
-            rating: 5,
             user: null,
             sinAlcoholLogo: mdiGlassCocktailOff,
             sinAzucar: mdiAlphaLCircleOutline,
             liked: false,
+            ratings: [],
+        }
+    },
+    computed:{
+        rating(){
+            let ratingTotal = 0;
+            let count = 0;
+            this.ratings.forEach(rating => {
+                ratingTotal += rating.value;
+                count++;
+            });
+            return ratingTotal/count;
         }
     },
     mounted(){
@@ -42,7 +53,9 @@ export default {
                 this.liked = true
             }
         }
-        
+        this.$fire.firestore.collection('ratings').doc(`${this.coctel.slug.current}`).get().then(doc => {
+            this.ratings = doc.data().ratings;
+        });
     },
     methods:{
         goTo(url){
