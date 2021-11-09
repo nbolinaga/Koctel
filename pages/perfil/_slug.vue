@@ -2,10 +2,10 @@
     <div>
         <Loader v-if="loading"></Loader>
         <v-container v-if="!loading" class="ma-0 pa-12  texto" fluid>
-            <img :src="user.photoURL" alt="" class="outline mt-5">
+            <img :src="user.photoURL" alt="" class="outline mt-5 rounded-circle">
             <h2 class="secundario--text titulo d-flex justify-center">{{user.displayName}}</h2>
             <h2 class="primario--text titulo d-flex justify-center mt-10">Tus cocteles favoritos</h2>
-            <CoctelesFavoritos :key="key" filtro-favoritos="true" :coctelesprorp="coctelesFavoritos"/>
+            <CoctelesFavoritos :key="key" filtro-favoritos="true" :coctelesprorp="coctelesFavoritos" :userprop="user"/>
         </v-container>
     </div>
 </template>
@@ -49,7 +49,6 @@ export default {
     },
     fetchData() {
       this.error = this.cocteles = null;
-      this.loading = false;
 
       this.$sanity.fetch(query).then(
         (cocteles) => {
