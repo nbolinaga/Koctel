@@ -13,24 +13,24 @@
       class="pa-5"
       :items="alcoholes"
       clearable
-      filled
-      solo
+      dark
       no-data-text="No existen Alcoholes con ese nombre"
       label="Añade un alcohol"
       hide-details
       item-text="nombre"
+      @keypress.enter="agregarIngrediente()"
     ></v-autocomplete>
     <v-autocomplete
       v-model="newIngredienteNombre"
       class="pa-5"
       :items="mixers"
       clearable
-      filled
-      solo
+      dark
       no-data-text="No existen Mixers con ese nombre"
       label="Añade un ingrediente"
       hide-details
       item-text="title"
+      @keypress.enter="agregarIngrediente()"
     ></v-autocomplete>
     <div class="text-center">
       <v-btn
@@ -73,19 +73,10 @@
         </v-list-item>
         <v-divider></v-divider>
       </div>
-      <div class="text-center alt pa-10">
-        <v-btn
-          color="primario"
-          x-large
-          class="texto--text"
-          @click="buscar()"
-        >BUSCAR</v-btn>
-      </div>
-
     </v-list>
     <v-container class="ma-0 pt-10 alt" fluid v-if="!loading">
       <h2 class="texto--text titulo d-flex justify-center">TRAGOS QUE PUEDES PREPARAR CON ESTOS INGREDIENTES</h2>
-      <ListaCocteles :key="key" :ingredientes="ingredientes" :incompletos="true"/>
+      <ListaBartender :key="key" :ingredientes="ingredientes"/>
     </v-container>
   </div>
 </template>
@@ -104,6 +95,11 @@ export default {
       ingredientes: [],
       key: false
     };
+  },
+  watch: {
+    ingredientes(){
+      this.buscar();
+    }
   },
   beforeMount() {
     this.fetchData();
@@ -139,7 +135,6 @@ export default {
       this.ingredientes = this.ingredientes.filter(ingrediente => ingrediente.id !== id)
     },
     fetchData() {
-      // this.error = this.mixers = null;
       this.loading = true;
       this.$sanity.fetch(query).then(
         (mixers) => {
@@ -152,7 +147,6 @@ export default {
       );
     },
     fetchData2() {
-      // this.error = this.alcoholes = null;
       this.loading = true;
       this.$sanity.fetch(query2).then(
         (alcoholes) => {
@@ -180,5 +174,8 @@ export default {
   .logoCompleto{
     widows: auto;
     height: 40vh;
+  }
+  .v-input__slot .v-label{
+    color: whitesmoke !important;
   }
 </style>
