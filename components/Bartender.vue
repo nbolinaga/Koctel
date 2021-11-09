@@ -55,7 +55,7 @@
           :key="ingrediente.id"
       >
         <v-list-item dark>
-            <template v-slot:default>
+            <template #default>
               <v-list-item-content>
                 <v-list-item-title>{{ ingrediente.nombre }}</v-list-item-title>
               </v-list-item-content>
@@ -74,7 +74,7 @@
         <v-divider></v-divider>
       </div>
     </v-list>
-    <v-container class="ma-0 pt-10 alt" fluid v-if="!loading">
+    <v-container v-if="!loading" class="ma-0 pt-10 alt" fluid>
       <h2 class="texto--text titulo d-flex justify-center">TRAGOS QUE PUEDES PREPARAR CON ESTOS INGREDIENTES</h2>
       <ListaBartender :key="key" :ingredientes="ingredientes"/>
     </v-container>
