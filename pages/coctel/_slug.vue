@@ -26,15 +26,43 @@
                             <v-list-item-title  id="pais" class="primario--text d-flex justify-center titulo">{{coctel.pais.nombre}}</v-list-item-title>
                         </v-list-item>
                         <v-list-item v-if="userID != null" class="d-flex justify-center mt-10 mb-5">
-                            <v-rating v-model="rating" half-increments background-color="alt lighten-3" color="alt" large></v-rating>
+                            <v-rating v-model="ratingUser" half-increments background-color="alt lighten-3" color="alt" large></v-rating>
                         </v-list-item>
                         
                     </v-list>
                 </v-col>
             </v-row>
-            <h3 class="detalles--text titulo d-flex justify-center mt-10">Preparacion</h3>
-            <p class="texto--text textos px-12 mt-5 mx-12 text-center mb-12">{{coctel.preparacion}}</p>
-            <div v-for="(comentario, index) in comentarios" :key="index" class="d-flex justify-center alt--text white"><h4>{{comentario.texto}} </h4> <p> - {{comentario.user}}</p></div>
+            <v-container>
+                <h3 class="detalles--text titulo d-flex justify-center mt-10">Preparacion</h3>
+                <p class="texto--text textos px-12 mt-5 mx-12 text-center mb-12">{{coctel.preparacion}}</p>
+            </v-container>
+            <div class="texto px-16 py-10">
+                <h3 class="alt--text titulo d-flex justify-center mb-6">Comentarios</h3>
+                <v-form v-if="userID" ref="form" v-model="form">
+                    <label for="">Comentario:</label>
+                    <v-textarea counter :rules="rules" v-model="comentario" hide-details="auto" filled auto-grow rows="1" color="secundario" row-height="15" @keypress.enter.prevent="form == true ? comment() : null">
+                        <v-icon slot="append" color="primario" @click="form == true ? comment() : null">
+                            mdi-import
+                        </v-icon>
+                    </v-textarea>
+                </v-form>
+                <v-timeline tile class="alt--text pt-16">
+                    <v-timeline-item v-for="(comentarioUser, index) in comentarios" :key="index" color="primario">
+                        <template #icon>
+                            <v-avatar>
+                            <img :src="comentarioUser.photoURL ? comentario.photoURL : `https://i.pravatar.cc/64/${index}`">
+                            </v-avatar>
+                        </template>
+                         <template  #opposite >
+                            <span class="primario--text" v-text="comentarioUser.date"></span>
+                        </template>
+                        <v-card class="elevation-15 texto pa-6" tile>
+                            <v-card-title class="text-justify">{{comentarioUser.texto}}<v-spacer></v-spacer><v-btn v-if="comentarioUser.id == userID" right fab small color="secundario" class="texto--text" @click="deleteComment(index)"><v-icon>mdi-trash-can-outline</v-icon></v-btn></v-card-title>
+                            <v-card-text tile class="alt texto--text pl-5 pt-5 mt-5 text-center"> - {{comentarioUser.user}} - </v-card-text>
+                        </v-card>
+                    </v-timeline-item>
+                </v-timeline>
+            </div>
         </v-container>
     </div>
 </template>
@@ -46,18 +74,55 @@ const query = groq`*[slug.current == $slug] {_id, nombre, slug, "pais": pais->{.
 export default {
     data() {
         return {
+            form: false,
             coctel: {},
             loading: true,
-            rating: 5,
             userID: null,
             user: null,
             liked: false,
-            comentarios: ["hello", "world"]
+            comentarios: [],
+            ratings: [],
+            comentario: "",
+            ratingUser: 0,
+            rules: [v => v.length <= 200 || 'Maximo de caracteres 200', v => !!v || 'Requerido', v => v.length > 2 || 'No puedes agregar un comentario vacio'],
+
+        }
+    },
+    computed:{
+        rating(){
+            let ratingTotal = 0;
+            let count = 0;
+            this.ratings.forEach(rating => {
+                if(rating.id === this.userID){
+                    this.ratingUser = rating.value
+                }
+                ratingTotal += rating.value;
+                count++;
+            });
+            return ratingTotal/count;
         }
     },
     watch: {
         user(){
             this.fetchData();
+        },
+        ratingUser(){
+            let found = false;
+            this.ratings.forEach(rating => {
+                if(rating.id === this.userID){
+                    rating.value = this.ratingUser
+                    found = true;
+                }
+            });
+            if(!found){
+                this.ratings.push({
+                    id: this.userID,
+                    value: this.ratingUser
+                })
+            }
+            this.$fire.firestore.collection("ratings").doc(`${this.coctel.slug.current}`).set({
+                    ratings: this.ratings
+            })
         }
     },
     beforeMount(){
@@ -88,11 +153,34 @@ export default {
             this.$fire.firestore.collection('comentarios').doc(`${this.coctel.slug.current}`).get().then(doc => {
                 this.comentarios = doc.data().comentarios;
             });
+            this.$fire.firestore.collection('ratings').doc(`${this.coctel.slug.current}`).get().then(doc => {
+                this.ratings = doc.data().ratings;
+            });
             },
             (error) => {
             this.error = error;
             });
             
+        },
+        deleteComment(val){
+            this.comentarios.splice(val, 1);
+            this.$fire.firestore.collection("comentarios").doc(`${this.coctel.slug.current}`).update({
+                comentarios: this.comentarios
+            })
+        },
+        comment(){
+            const comment = {
+                texto: this.comentario,
+                user: this.user.displayName,
+                photoURL: this.user.photoURL,
+                date: new Date().toLocaleString(),
+                id: this.userID
+            }
+            this.comentarios.push(comment);
+            this.$fire.firestore.collection("comentarios").doc(`${this.coctel.slug.current}`).set({
+                    comentarios: this.comentarios
+                })
+            this.comentario = "";
         },
         like(){
             this.liked = !this.liked;
@@ -124,5 +212,9 @@ export default {
     }
     #pais{
         font-size: 1.5em;
+    }
+
+    .v-card__text, .v-card__title {
+        word-break: normal; /* maybe !important  */
     }
 </style>
