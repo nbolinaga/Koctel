@@ -6,7 +6,7 @@
             <img :src="pais.img" alt="" class="outline mt-5">
         </v-container>
          <v-container v-if="!loading" class="ma-0 pt-10 alt" fluid>
-            <h2 class="texto--text titulo d-flex justify-center">TRAGOS CON ESTE INGREDIENTE</h2>
+            <h2 class="texto--text titulo d-flex justify-center">TRAGOS DE ESTE PAIS</h2>
             <ListaCocteles :pais="pais.nombre"/>
         </v-container>
     </div>
