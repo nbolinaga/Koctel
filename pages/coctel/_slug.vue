@@ -40,7 +40,7 @@
                 <h3 class="alt--text titulo d-flex justify-center mb-6">Comentarios</h3>
                 <v-form v-if="userID" ref="form" v-model="form">
                     <label for="">Comentario:</label>
-                    <v-textarea counter :rules="rules" v-model="comentario" hide-details="auto" filled auto-grow rows="1" color="secundario" row-height="15" @keypress.enter.prevent="form == true ? comment() : null">
+                    <v-textarea v-model="comentario" counter :rules="rules" hide-details="auto" filled auto-grow rows="1" color="secundario" row-height="15" @keypress.enter.prevent="form == true ? comment() : null">
                         <v-icon slot="append" color="primario" @click="form == true ? comment() : null">
                             mdi-import
                         </v-icon>

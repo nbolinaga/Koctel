@@ -53,9 +53,7 @@ export default {
       this.$sanity.fetch(query).then(
         (cocteles) => {
           cocteles.forEach(coctel => {
-              console.log(coctel.slug.current);
               if(this.user.favoritos.includes(coctel.slug.current)){
-                console.log(coctel.slug.current);
                 this.coctelesFavoritos.push(coctel);
               }
           })
