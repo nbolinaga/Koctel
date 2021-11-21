@@ -132,7 +132,8 @@ export default {
                     displayName: this.user.displayName,
                     photoURL: this.user.photoURL,
                     favoritos: [],
-                    ratings: [{}]
+                    ratings: [{}],
+                    admin: false
                 }
                 ).then(() => {
                     window.location.reload(true);
