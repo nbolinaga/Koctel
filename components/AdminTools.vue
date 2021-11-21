@@ -1,6 +1,6 @@
 <template>
   <v-container>
-      <h2 class="alt--text titulo d-flex justify-center my-2">Administrador</h2>
+      <h2 class="alt--text titulo text-center my-2">Administrador</h2>
         <!-- <v-timeline tile class="alt--text pt-16">
             <v-timeline-item v-for="(comentarioUser, index) in comments" :key="index" color="primario">
                 <template #icon>

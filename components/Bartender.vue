@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     
-    <h1 class="primario--text titulo d-flex justify-center">CONOCE A NUESTRO BARTENDER DE BOLSILLO</h1>
-    <p class="texto--text textos px-12 mt-5 text-center">
+    <h1 class="primario--text titulo d-md-flex justify-center text-left">CONOCE A NUESTRO BARTENDER DE BOLSILLO</h1>
+    <p class="texto--text textos px-md-12 mt-5 text-md-center text-justify">
       Este es nuestro bartender al alcance de tus manos.
-      Simplemente coloca los ingredientes que tengas disponibles a tus manos y luego haz click en buscar.
+      Simplemente selecciona un ingrediente que tengas disponible a tus manos en el dropdown y luego haz click en agregar.
       Asi de simple podras encontrar los diferentes cocteles que puedes preparar con lo que tienes disponible!.
     </p>
     <Loader v-if="loading" />
@@ -34,13 +34,13 @@
     ></v-autocomplete>
     <div class="text-center">
       <v-btn
-      class="mx-2"
-      fab
+      class="mx-2 my-5"
       dark
       color="primario"
       @click="agregarIngrediente()"
       >
-      <v-icon dark>
+      Agregar
+      <v-icon dark right>
         mdi-plus
       </v-icon>
       </v-btn>

@@ -1,7 +1,7 @@
 <template>
-    <div class="pa-10">
+    <div class="pa-5">
         <Loader v-if="loading" />
-        <v-row class="d-flex justify-space-around">
+        <v-row class="d-md-flex justify-space-around d-block">
           <h4 v-if="cocteles.length == 0 && !loading" class="textos primario--text">No se encontro ningun coctel</h4>
           <coctelCard v-for="coctel in cocteles" :key="coctel._id" :coctel="coctel" :userprop="user"/>
         </v-row>

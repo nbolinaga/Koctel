@@ -1,6 +1,6 @@
 <template>
   <v-app :style="{background: $vuetify.theme.themes[theme].alt}">>
-    <Header />
+    <Header class="hidden-sm-and-down"/>
     <v-main>
       <Nuxt class="mt-10" fluid/>
     </v-main>

@@ -6,7 +6,7 @@
             <p class="alt--text textos mt-5 text-center">{{ingrediente.description}}</p>
         </v-container>
          <v-container v-if="!loading" class="ma-0 pt-10 alt" fluid>
-            <h2 class="texto--text titulo d-flex justify-center">TRAGOS CON ESTE INGREDIENTE</h2>
+            <h2 class="texto--text titulo text-center">TRAGOS CON ESTE INGREDIENTE</h2>
             <ListaCocteles :ingrediente-filtro="ingrediente.title"/>
         </v-container>
     </div>

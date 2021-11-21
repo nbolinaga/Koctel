@@ -1,11 +1,11 @@
 <template>
     <div>
         <Loader v-if="loading"></Loader>
-        <v-container v-if="!loading" class="ma-0 pa-12  texto" fluid>
+        <v-container v-if="!loading" class="ma-0 pt-md-12 pa-0 texto" fluid>
             <img :src="user.photoURL" alt="" class="outline mt-5 rounded-circle">
             <h2 class="secundario--text titulo d-flex justify-center mt-3">{{user.displayName}}</h2>
             <AdminTools v-if="user.admin"/>
-            <h2 class="primario--text titulo d-flex justify-center mt-10">Tus cocteles favoritos</h2>
+            <h2 class="primario--text titulo d-flex justify-center my-10">Tus cocteles favoritos</h2>
             <CoctelesFavoritos :key="key" filtro-favoritos="true" :coctelesprorp="coctelesFavoritos" :userprop="user"/>
         </v-container>
 

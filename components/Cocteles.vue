@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="titulo primario--text mb-8">Nuestros cocteles</h2>
-    <p class="textos texto--text">A continuación encontrarás nuestra gran gama de cocteles de todas partes del mundo, donde te ofrecemos tragos desde los más populares hasta cocteles sin alcohol o sin azúcar. En Koctel siempre estamos actualizando nuestro catálogo de cocteles con los más nuevos</p>
+    <p class="textos texto--text text-md-left text-justify">A continuación encontrarás nuestra gran gama de cocteles de todas partes del mundo, donde te ofrecemos tragos desde los más populares hasta cocteles sin alcohol o sin azúcar. En Koctel siempre estamos actualizando nuestro catálogo de cocteles con los más nuevos</p>
     <div class="d-flex">
       <v-switch v-model="lightFiltro" dark :label="`Solo Light`" :disabled="pais != null || nombre != null"></v-switch>
       <v-icon class="pb-2 primario--text" right>{{sinAzucar}}</v-icon>
