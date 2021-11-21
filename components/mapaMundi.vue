@@ -1,8 +1,9 @@
 <template>
 <SvgPanZoom
-    style="outline: 3px solid red"
     :zoom-enabled="true"
     :contain="true"
+    :dblClickZoomEnabled="false"
+    :preventMouseEventsDefault="false"
   >
 <svg
    mapsvg:geoViewBox="-169.110266 83.600842 190.486279 -58.508473"
