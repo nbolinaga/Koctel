@@ -1,5 +1,5 @@
 <template>
-    <div class="pa-10">
+    <div class="pa-10 alt">
         <Loader v-if="loading" />
         <v-row class="d-flex justify-space-around alt">
           <h4 v-if="cocteles.length == 0 && !loading" class="textos primario--text">No se encontro ningun coctel favorito</h4>

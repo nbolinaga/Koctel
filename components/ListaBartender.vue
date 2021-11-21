@@ -1,11 +1,11 @@
 <template>
-    <div class="pa-10">
+    <div class="pa-md-10 pa-3">
         <Loader v-if="loading" />
-        <v-row class="d-flex justify-space-around">
-          <h4 v-if="coctelesFiltrados.length == 0 && !loading" class="textos primario--text">No se encontro ningun coctel</h4>
+        <v-row class="d-md-flex justify-space-around">
+          <h4 v-if="coctelesFiltrados.length == 0 && !loading" class="textos primario--text mt-10">No se encontro ningun coctel</h4>
           <coctelCard v-for="coctel in coctelesFiltrados" :key="coctel._id" :coctel="coctel" :userprop="user"/>
         </v-row>
-        <v-row class="d-flex justify-space-around">
+        <v-row class="d-md-flex justify-space-around">
           <h2 class="texto--text titulo d-flex justify-center my-10">TRAGOS QUE SOLO TE FALTAN ALGUNOS INGREDIENTES PARA PODER PREPARAR</h2>
           <coctelCard v-for="coctelInc in coctelesIncompletos" :key="coctelInc._id" :coctel="coctelInc" :userprop="user"/>
         </v-row>

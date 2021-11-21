@@ -34,19 +34,19 @@
             </v-row>
             <v-container>
                 <h3 class="detalles--text titulo d-flex justify-center mt-10">Preparacion</h3>
-                <p class="texto--text textos px-12 mt-5 mx-12 text-center mb-12">{{coctel.preparacion}}</p>
+                <p class="texto--text textos px-md-12 mt-5 mx-md-12 text-md-center mb-12 text-justify mx-6">{{coctel.preparacion}}</p>
             </v-container>
-            <div class="texto px-16 py-10">
+            <div class="texto px-md-16 py-10">
                 <h3 class="alt--text titulo d-flex justify-center mb-6">Comentarios</h3>
-                <v-form v-if="userID" ref="form" v-model="form">
+                <v-form v-if="userID" ref="form" v-model="form" class="px-6 px-md-0"> 
                     <label for="">Comentario:</label>
                     <v-textarea v-model="comentario" counter :rules="rules" hide-details="auto" filled auto-grow rows="1" color="secundario" row-height="15" @keypress.enter.prevent="form == true ? comment() : null">
                         <v-icon slot="append" color="primario" @click="form == true ? comment() : null">
-                            mdi-import
+                            mdi-send
                         </v-icon>
                     </v-textarea>
                 </v-form>
-                <v-timeline tile class="alt--text pt-16">
+                <v-timeline tile class="alt--text pt-16 hidden-sm-and-down">
                     <v-timeline-item v-for="(comentarioUser, index) in comentarios" :key="index" color="primario">
                         <template #icon>
                             <v-avatar>
@@ -57,11 +57,30 @@
                             <span class="primario--text" v-text="comentarioUser.date"></span>
                         </template>
                         <v-card class="elevation-15 texto pa-6" tile>
-                            <v-card-title class="text-justify">{{comentarioUser.texto}}<v-spacer></v-spacer><v-btn v-if="comentarioUser.id == userID || user.admin" right fab small color="secundario" class="texto--text mt-5" @click="deleteComment(index)"><v-icon >mdi-trash-can-outline</v-icon></v-btn></v-card-title>
+                            <v-card-title class="text-justify">{{comentarioUser.texto}}<v-spacer></v-spacer><v-btn v-if="comentarioUser.id == userID || admin" right fab small color="secundario" class="texto--text mt-5" @click="deleteComment(index)"><v-icon >mdi-trash-can-outline</v-icon></v-btn></v-card-title>
                             <v-card-text tile class="alt texto--text pl-5 pt-5 mt-5 text-center"> - {{comentarioUser.user}} - </v-card-text>
                         </v-card>
                     </v-timeline-item>
                 </v-timeline>
+                <v-container class=" hidden-md-and-up">
+                    <v-card v-for="(comentarioUser, index) in comentarios" :key="index" color="texto" class="mx-3 elevation-15 my-10">
+                        <v-card-title class="d-flex">
+                            <p class="ml-4 mt-5">{{comentarioUser.user}}</p>
+                            <v-spacer></v-spacer>
+                            <v-avatar class="mr-4" tile>
+                                <img :src="comentarioUser.photoURL ? comentarioUser.photoURL : `https://i.pravatar.cc/64/${index}`">
+                            </v-avatar>
+                            <v-card-subtitle>
+                                {{comentarioUser.texto}}
+                            </v-card-subtitle>
+                            <v-card-text>
+                                <p class="primario--text">{{comentarioUser.date}}</p>
+                                <v-spacer></v-spacer>
+                                <v-btn v-if="comentarioUser.id == userID || admin" right fab small color="secundario" class="texto--text mt-5" @click="deleteComment(index)"><v-icon >mdi-trash-can-outline</v-icon></v-btn>
+                            </v-card-text>
+                        </v-card-title>
+                    </v-card>
+                </v-container>
             </div>
         </v-container>
     </div>
@@ -79,6 +98,7 @@ export default {
             loading: true,
             userID: null,
             user: null,
+            admin: false,
             liked: false,
             comentarios: [],
             ratings: [],
@@ -137,6 +157,7 @@ export default {
         fetchUserData(){
             this.$fire.firestore.collection('users').doc(`${this.userID}`).get().then(doc => {
                 this.user = doc.data();
+                this.admin = doc.data().admin;
             });
             
         },
