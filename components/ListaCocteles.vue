@@ -33,6 +33,10 @@ export default {
         type: String,
         default: null
       },
+      alcohol:{
+        type: String,
+        default: null
+      },
       pais:{
         type: String,
         default: null
@@ -84,6 +88,9 @@ export default {
       }
       if(this.nombre !== null){
         toFetch = groq`*[_type == "coctel" && nombre == "${this.nombre}"] {_id, nombre, "nombreAlcohol": alcohol[]->nombre, slug, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
+      }
+      if(this.alcohol !== null){
+        toFetch = groq`*[_type == "coctel" && "${this.alcohol}" in alcohol[]->nombre] {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
       }
       if(this.pais !== null){
         toFetch = groq`*[_type == "coctel" && pais->nombre == "${this.pais}"] {_id, nombre, slug, "nombreAlcohol": alcohol[]->nombre, "img": mainImage.asset->url, "categoria": categoria[]->titulo}`;
