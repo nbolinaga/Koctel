@@ -56,6 +56,11 @@ export default {
                     text: 'BARTENDER',
                     icon: 'mdi-account',
                     link: '/#bartender',
+                    show: true},
+                {
+                    text: 'MAPA',
+                    icon: 'mdi-map',
+                    link: '/#mapa',
                     show: true}   
             ],
             aleatorio: {
