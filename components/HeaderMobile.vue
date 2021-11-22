@@ -1,35 +1,26 @@
 <template>
-    <v-app-bar :key="key" color="secundario" fixed flat class="overflow-hidden">
-        <LogoLargo fill="#FFFFFF" class="logoHeader"/>
-        <v-spacer></v-spacer>
-        <v-list class="d-flex flex-row secundario" >
-            <v-list-item v-for="(item, index) in menu" :key="index" nuxt :to="item.link" active-class="alt--text" class="titulo texto--text no-background-hover">
-                <v-list-item-title class="nav-item">
-                    <v-icon class="pb-1 ">{{ item.icon }}</v-icon>
-                    {{ item.text }}
-                </v-list-item-title>
-            </v-list-item>
-            <v-list-item active-class="alt--text" class="titulo texto--text no-background-hover">
-                <v-list-item-title class="nav-item" @click="getAleatorio">
-                    <v-icon class="pb-1">{{ aleatorio.icon }}</v-icon>
-                    {{ aleatorio.text }}
-                </v-list-item-title>
-            </v-list-item>
-            <v-list-item v-if="user != null" active-class="alt--text" class="titulo texto--text no-background-hover">
-                <v-list-item-title class="nav-item" @click="getPerfil">
-                    <v-icon class="pb-1">{{ perfil.icon }}</v-icon>
-                    {{ perfil.text }}
-                </v-list-item-title>
-            </v-list-item>
-        </v-list>
-        <v-spacer></v-spacer>
-        <v-btn  v-if="user == null" fab color="primario" x-small @click="googleSignIn" ><v-icon class="white--text">mdi-google</v-icon></v-btn>
-        <v-btn  v-if="user != null" color="primario" class="white--text" small @click="logOut" >Salir <v-icon class="white--text" right>mdi-logout</v-icon></v-btn>
-        <v-snackbar v-model="snackbar" timeout="1000" absolute bottom color="alt" tile>
-            <h5 v-if="user != null" text-center>Ingresado Exitosamente</h5>
-            <h5 v-else text-center>Desconectado Exitosamente</h5>
-        </v-snackbar>
-    </v-app-bar>
+    <div>
+        <v-card id="mobileHeader" @click="open = !open" class="px-12 primario">
+            <v-icon v-if="!open" class="white--text float-right">mdi-menu</v-icon>
+            <v-icon v-if="open" class="white--text float-right">mdi-close</v-icon>
+        </v-card> 
+        <div v-if="open" class="d-flex justify-center modal">
+            <ul id="nav" class="alt">
+                <li v-for="(item, index) in menu" :key="index" @click="goToRoute(item.link)" active-class="alt--text" class="ml-n4 titulo texto--text no-background-hover"><v-icon class="pb-1 secundario--text mr-2">{{ item.icon }}</v-icon>{{ item.text }}</li>
+                <li active-class="alt--text" class="ml-n4 titulo texto--text no-background-hover" @click="getAleatorio"><v-icon class="pb-1 secundario--text mr-2">{{ aleatorio.icon }}</v-icon>{{ aleatorio.text }}</li>
+                <li v-if="user != null" active-class="alt--text" class="ml-n4 titulo texto--text no-background-hover" @click="getPerfil"><v-icon class="pb-1 secundario--text mr-2">{{ perfil.icon }}</v-icon>{{ perfil.text }}</li>
+                <li class="mr-4">
+                    <v-btn  v-if="user == null" fab color="primario" x-small @click="googleSignIn" ><v-icon class="white--text">mdi-google</v-icon></v-btn>
+                    <v-btn  v-if="user != null" color="primario" class="white--text" small @click="logOut" >Salir <v-icon class="white--text" right>mdi-logout</v-icon></v-btn>
+                    <v-snackbar v-model="snackbar" timeout="1000" absolute bottom color="alt" tile>
+                        <h5 v-if="user != null" text-center>Ingresado Exitosamente</h5>
+                        <h5 v-else text-center>Desconectado Exitosamente</h5>
+                    </v-snackbar>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
 </template>
 
 <script>
@@ -38,6 +29,7 @@ const query = groq`*[_type == "coctel"] {slug}`;
 export default {
     data() {
         return {
+            open: false,
             snackbar: false,
             user: null,
             listaSlug: [],
@@ -99,9 +91,11 @@ export default {
             getAleatorio() {
                 const random = Math.floor(Math.random() * this.listaSlug.length);
                 this.$router.push({ path: `/coctel/${this.listaSlug[random].slug.current}` })
+                this.open = false;
             },
             getPerfil() {
                 this.$router.push({ path: `/perfil/${this.user.uid}` })
+                this.open = false;
             },
             googleSignIn() {
                 this.provider = new this.$fireModule.auth.GoogleAuthProvider()
@@ -143,22 +137,50 @@ export default {
                 ).then(() => {
                     window.location.reload(true);
                 });
+            },
+            goToRoute(route){
+                this.$router.push(`${route}`);
+                this.open = false;
             }
         }
     }
 </script>
 
 <style lang="scss">
-    .logoHeader {
-        width: auto;
-        height: 3.5vh;
+#mobileHeader{
+    position: fixed !important;
+    z-index: 999;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.modal{
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba($color: #000000, $alpha: .70);
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        z-index: 997;
     }
-    .nav-item{
-        font-size: 2vh;
-        cursor: pointer;
+#nav{
+    position: fixed !important;
+    bottom: 8vh;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 998;
+    list-style: none;
+    text-align: center;
+    padding-top: 50px;
+    width: 100vw;
+
+    li{
+        height: 50px;
     }
-    .no-background-hover::before {
-        background-color: transparent;
-        color: $links;
+    a{
+        text-decoration: none;
     }
+
+    
+}
 </style>

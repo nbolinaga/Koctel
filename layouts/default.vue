@@ -1,8 +1,9 @@
 <template>
-  <v-app :style="{background: $vuetify.theme.themes[theme].alt}">>
-    <Header class="hidden-sm-and-down"/>
+  <v-app :style="{background: $vuetify.theme.themes[theme].alt}">
+    <Header v-if="$vuetify.breakpoint.mobile ? false : true"/>
+    <HeaderMobile v-if="$vuetify.breakpoint.mobile ? true : false" class="d-block"/>
     <v-main>
-      <Nuxt class="mt-10" fluid/>
+      <Nuxt class="mt-md-10 mt-n6" fluid/>
     </v-main>
   </v-app>
 </template>
