@@ -1,7 +1,7 @@
 <template>
     <div>
         <Loader v-if="loading"></Loader>
-        <v-container v-if="!loading" class="ma-0 pt-md-12 pa-0 texto" fluid>
+        <v-container v-if="!loading" class="ma-0 pt-md-12 pa-0 pt-6 texto" fluid>
             <img :src="user.photoURL" alt="" class="outline mt-5 rounded-circle">
             <h2 class="secundario--text titulo d-flex justify-center mt-3">{{user.displayName}}</h2>
             <AdminTools v-if="user.admin"/>
@@ -19,14 +19,14 @@
             <CoctelesFavoritos :key="key" filtro-favoritos="true" :coctelesprorp="coctelesFavoritos" :userprop="user"/>
             <v-container>
               <h2 class="alt--text titulo text-center mt-6 mb-4">Ingredientes de Mi Grupo</h2>
-               <ul class="text-center ml-n6 mb-10" :key="totales">
+               <ul class="text-center ml-n6 mb-10">
                       <li v-for="(ingrediente, index) in ingredientesTotales" :key="index">{{ingrediente}}</li>
                     </ul>
               <h2 class="alt--text titulo text-center mb-6">Usuarios</h2>
             <v-expansion-panels tile popout>
               <v-expansion-panel v-for="(usuario,index) in users" :key="index">
                 <v-expansion-panel-header>
-                    <h4>{{usuario.displayName}}<v-icon v-if="user.miGrupo.includes(usuario)" right class="secundario--text">mdi-account-star</v-icon></h4>
+                    <h4>{{usuario.displayName}}<v-icon v-if="grupo.includes(usuario) === true" right class="secundario--text">mdi-account-star</v-icon></h4>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                     <img :src="usuario.photoURL" alt="" class="outline mt-5">
@@ -38,8 +38,8 @@
                       <h4 class="my-5">Cocteles Favoritos de esta persona</h4>
                       <li v-for="(favorito, index3) in usuario.favoritos" :key="index3">{{favorito}}</li>
                     </ul>
-                    <v-btn v-if="!user.miGrupo.includes(usuario)" @click="agregarUser(usuario)" class="secundario mt-6">Agregar a Mi Grupo</v-btn>
-                    <v-btn v-if="user.miGrupo.includes(usuario)" @click="eliminar(usuario)" class="primario mt-6">Eliminar de Mi Grupo</v-btn>
+                    <v-btn v-if="grupo.includes(usuario) === false" @click="agregarUser(usuario)" class="secundario mt-6">Agregar a Mi Grupo</v-btn>
+                    <v-btn v-if="grupo.includes(usuario) === true" @click="eliminar(usuario)" class="primario mt-6">Eliminar de Mi Grupo</v-btn>
                 </v-expansion-panel-content>
               </v-expansion-panel >
             </v-expansion-panels>
@@ -72,7 +72,8 @@ export default {
             sinAzucar: mdiAlphaLCircleOutline,
             coctelesFavoritos: [],
             users: [],
-            totales: false
+            totales: false,
+            grupo: []
         }
     },
     computed:{
@@ -98,7 +99,6 @@ export default {
           this.fetchData();
           this.fetchDataIngredientes();
           this.fetchDataAlcoholes()
-          this.totales = !this.totales
         },
     },
     beforeMount(){
@@ -110,12 +110,11 @@ export default {
       this.fetchData();
       this.fetchDataIngredientes();
       this.fetchDataAlcoholes()
-      console.log(this.user.miGrupo)
       } 
     },
     methods:{
-    async getUsers(){
-        const events = await this.$fire.firestore.collection('users')
+     getUsers(){
+        const events = this.$fire.firestore.collection('users')
         events.get().then((querySnapshot) => {
         const tempDoc = querySnapshot.docs.map((doc) => {
             return { id: doc.id, ...doc.data() }
@@ -130,11 +129,11 @@ export default {
     fetchUserData(){
       this.$fire.firestore.collection('users').doc(`${this.userID}`).get().then(doc => {
         this.user = doc.data();
+        this.grupo = this.user.miGrupo;
       });
     },
     fetchData() {
       this.error = this.cocteles = null;
-
       this.$sanity.fetch(query).then(
         (cocteles) => {
           cocteles.forEach(coctel => {
@@ -218,15 +217,15 @@ export default {
       })
     },
     agregarUser(usuario){
-      this.user.miGrupo.push(usuario);
+      this.grupo.push(usuario);
       this.$fire.firestore.collection("users").doc(`${this.user.uid}`).update({
-          miGrupo: this.user.miGrupo
+          miGrupo: this.grupo
       })
     },
     eliminar(usuario){
-      this.user.miGrupo.splice(this.user.miGrupo.indexOf(usuario), 1);
+      this.grupo.splice( this.grupo.indexOf(usuario), 1);
       this.$fire.firestore.collection("users").doc(`${this.user.uid}`).update({
-          miGrupo: this.user.miGrupo
+          miGrupo: this.grupo
       })
     }
 }}
