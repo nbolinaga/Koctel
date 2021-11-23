@@ -137,7 +137,8 @@ export default {
                     displayName: this.user.displayName,
                     photoURL: this.user.photoURL,
                     favoritos: [],
-                    ratings: [{}],
+                    tiene: [],
+                    miGrupo: [],
                     admin: false
                 }
                 ).then(() => {
