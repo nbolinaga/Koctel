@@ -101,7 +101,7 @@ export default {
                 this.$router.push({ path: `/coctel/${this.listaSlug[random].slug.current}` })
             },
             getPerfil() {
-                this.$router.push({ path: `/perfil/${this.user.uid}` })
+                this.$router.push({ path: `/perfil` })
             },
             googleSignIn() {
                 this.provider = new this.$fireModule.auth.GoogleAuthProvider()

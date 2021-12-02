@@ -1,45 +1,96 @@
 <template>
     <div>
         <Loader v-if="loading"></Loader>
-        <v-container v-if="!loading" class="ma-0 pt-md-12 pa-0 texto" fluid>
+        <v-container v-if="!loading" class="ma-0 pt-md-12 pa-0 pt-10 pt-md-0 texto" fluid>
             <img :src="user.photoURL" alt="" class="outline mt-5 rounded-circle">
             <h2 class="secundario--text titulo d-flex justify-center mt-3">{{user.displayName}}</h2>
+            <h2 v-if="user.admin" class="alt--text titulo text-center my-2">Administrador</h2>
             <AdminTools v-if="user.admin"/>
-            <h2 class="primario--text titulo d-flex justify-center pt-10 px-2 px-md-0 text-center">Tus Alcoholes Disponibles</h2>
-            <p class="text-center pb-6">Click para agregar o quitar un alcohol</p>
-            <v-row justify="center" align="center" class="px-6 px-md-16">
-              <v-chip v-for="(alcohol, index) in alcoholes" :key="index" class="mx-5 my-2 alt white--text" :input-value="checkActiveAlcohol(alcohol)" filter  label @click="agregarAlcohol(alcohol)">{{alcohol.nombre}}</v-chip>
-            </v-row>
-            <h2 class="primario--text titulo d-flex justify-center pt-10 px-2 px-md-0 text-center">Tus Ingredientes Disponibles</h2>
-            <p class="text-center pb-6">Click para agregar o quitar un ingrediente</p>
-            <v-row justify="center" align="center" class="px-6 px-md-16">
-              <v-chip v-for="(ingrediente, index) in ingredientes" :key="index" class="mx-5 my-2 alt white--text" :input-value="checkActiveIngrediente(ingrediente)" filter label  @click="agregarIngrediente(ingrediente)">{{ingrediente.title}}</v-chip>
-            </v-row>
-            <h2 class="primario--text titulo d-flex justify-center my-10">Tus cocteles favoritos</h2>
+            <h2 class="secundario--text titulo d-flex justify-center pt-10 px-2 px-md-0 text-center">Tus Alcoholes Disponibles</h2>
+            <p class="alt--text titulo d-flex justify-center pt-4 px-md-0 text-center px-10">Haz click en un icono para agregar o quitar un alcohol</p>
+            <v-simple-table class="mx-md-16 mx-6 mt-6" height="300px">
+              <template #default>
+                <thead>
+                  <tr>
+                    <th class="text-left">
+                      Alcohol
+                    </th>
+                    <th class="text-left">
+                      Disponibilidad
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(alcohol, index) in alcoholes"
+                    :key="index"
+                  >
+                    <td width="100%">{{ alcohol.nombre }}</td>
+                    <td>
+                      <v-btn  class="ml-2" small @click="agregarAlcohol(alcohol)">
+                          <v-icon v-if="checkActiveAlcohol(alcohol)" class="alt--text">mdi-check</v-icon>
+                          <v-icon v-else class=" primario--text">mdi-close</v-icon>
+                      </v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+            <h2 class="secundario--text titulo d-flex justify-center pt-10 px-md-0 text-center px-10">Tus Ingredientes Disponibles</h2>
+            <p class="alt--text titulo d-flex justify-center pt-4 px-md-0 text-center px-10">Haz click en un icono para agregar o quitar un ingrediente</p>
+            <v-simple-table class="mx-md-16 mx-6 mt-6" height="300px">
+              <template #default>
+                <thead>
+                  <tr>
+                    <th class="text-left">
+                      Ingrediente
+                    </th>
+                    <th class="text-left">
+                      Disponibilidad
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(ingrediente, index) in ingredientes"
+                    :key="index"
+                  >
+                    <td width="100%">{{ ingrediente.title }}</td>
+                    <td>
+                      <v-btn class="ml-2" small @click="agregarIngrediente(ingrediente)">
+                          <v-icon v-if="checkActiveIngrediente(ingrediente)" class="alt--text">mdi-check</v-icon>
+                          <v-icon v-else class=" primario--text">mdi-close</v-icon>
+                      </v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
             <CoctelesFavoritos :key="key" filtro-favoritos="true" :coctelesprorp="coctelesFavoritos" :userprop="user"/>
             <v-container>
               <h2 class="alt--text titulo text-center mt-6 mb-4">Ingredientes de Mi Grupo</h2>
-               <ul class="text-center ml-n6 mb-10" :key="totales">
-                      <li v-for="(ingrediente, index) in ingredientesTotales" :key="index">{{ingrediente}}</li>
+              <p v-if="user.miGrupo.length == 0" class="primario--text titulo d-flex justify-center pt-4 px-md-0 text-center px-10">No tienes a nadie en tu grupo</p>
+               <ul :key="totales" class="text-center ml-n6 mb-10">
+                      <li v-for="(ingrediente, index) in ingredientesTotales" :key="index">{{getName(ingrediente)}}</li>
                     </ul>
               <h2 class="alt--text titulo text-center mb-6">Usuarios</h2>
-            <v-expansion-panels tile popout>
+            <v-expansion-panels v-if="!loading" tile popout class="mb-16">
               <v-expansion-panel v-for="(usuario,index) in users" :key="index">
                 <v-expansion-panel-header>
-                    <h4>{{usuario.displayName}}<v-icon v-if="user.miGrupo.includes(usuario)" right class="secundario--text">mdi-account-star</v-icon></h4>
+                    <h4 class="ml-6">{{usuario.displayName}}<v-icon v-if="user.miGrupo.includes(usuario)" right class="secundario--text">mdi-account-star</v-icon></h4>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                    <img :src="usuario.photoURL" alt="" class="outline mt-5">
-                    <ul class="text-center">
+                    <v-img :src="usuario.photoURL" alt="" class="outline mt-5 d-md-flex float-md-right" width="100px"></v-img>
+                    <ul class="text-left">
                       <h4 class="my-5">Ingredientes que tiene esta persona disponible</h4>
-                      <li v-for="(ingrediente, index2) in usuario.tiene" :key="index2">{{ingrediente}}</li>
+                      <li v-for="(ingrediente, index2) in usuario.tiene" :key="index2">{{getName(ingrediente)}}</li>
                     </ul>
-                    <ul class="text-center">
+                    <ul class="text-left">
                       <h4 class="my-5">Cocteles Favoritos de esta persona</h4>
-                      <li v-for="(favorito, index3) in usuario.favoritos" :key="index3">{{favorito}}</li>
+                      <li v-for="(favorito, index3) in usuario.favoritos" :key="index3">{{getName(favorito)}}</li>
                     </ul>
-                    <v-btn v-if="!user.miGrupo.includes(usuario)" @click="agregarUser(usuario)" class="secundario mt-6">Agregar a Mi Grupo</v-btn>
-                    <v-btn v-if="user.miGrupo.includes(usuario)" @click="eliminar(usuario)" class="primario mt-6">Eliminar de Mi Grupo</v-btn>
+                    <v-btn v-if="!user.miGrupo.includes(usuario)" class="secundario my-12" width="100%" @click="agregarUser(usuario)">Agregar a Mi user.miGrupo</v-btn>
+                    <v-btn v-if="user.miGrupo.includes(usuario)" class="primario my-12 " width="100%" @click="eliminar(usuario)">Eliminar de Mi user.miGrupo</v-btn>
                 </v-expansion-panel-content>
               </v-expansion-panel >
             </v-expansion-panels>
@@ -72,7 +123,7 @@ export default {
             sinAzucar: mdiAlphaLCircleOutline,
             coctelesFavoritos: [],
             users: [],
-            totales: false
+            totales: false,
         }
     },
     computed:{
@@ -84,11 +135,13 @@ export default {
           }
         });
         this.user.miGrupo.forEach(user => {
-          user.tiene.forEach(ingrediente => {
-            if(!totales.includes(ingrediente)){
-              totales.push(ingrediente);
-            }
-          })
+          if(user.tiene != null){
+            user.tiene.forEach(ingrediente => {
+              if(!totales.includes(ingrediente)){
+                totales.push(ingrediente);
+              }
+            })
+          }
         });
         return totales;
       }
@@ -96,6 +149,7 @@ export default {
     watch: {
         user(){
           this.fetchData();
+          this.getUsers();
           this.fetchDataIngredientes();
           this.fetchDataAlcoholes()
           this.totales = !this.totales
@@ -103,22 +157,23 @@ export default {
     },
     beforeMount(){
       localStorage.getItem('user') ? this.userID = JSON.parse(localStorage.getItem('user')) : this.userID = null;
-      this.getUsers();
+      
       if(this.userID != null){
       this.fetchUserData();
       } else {
       this.fetchData();
+      this.getUsers();
       this.fetchDataIngredientes();
       this.fetchDataAlcoholes()
-      console.log(this.user.miGrupo)
       } 
+      
     },
     methods:{
     async getUsers(){
         const events = await this.$fire.firestore.collection('users')
         events.get().then((querySnapshot) => {
         const tempDoc = querySnapshot.docs.map((doc) => {
-            return { id: doc.id, ...doc.data() }
+            return { ...doc.data() }
             })
             tempDoc.forEach(element => {
               if(element.id !== this.userID){
@@ -130,7 +185,9 @@ export default {
     fetchUserData(){
       this.$fire.firestore.collection('users').doc(`${this.userID}`).get().then(doc => {
         this.user = doc.data();
+        this.user.miGrupo = doc.data().miGrupo;
       });
+      
     },
     fetchData() {
       this.error = this.cocteles = null;
@@ -154,11 +211,13 @@ export default {
       this.$sanity.fetch(query2).then(
         (mixers) => {
           this.ingredientes = mixers
-          mixers.forEach(mixer => {
+          if(mixers.length > 0){
+            mixers.forEach(mixer => {
               if(this.user.tiene.includes(mixer.id.current)){
                 this.ingredientesDisponibles.push(mixer);
               }
-          })
+            })
+          }
           this.loading = false;
         },
         (error) => {
@@ -228,7 +287,14 @@ export default {
       this.$fire.firestore.collection("users").doc(`${this.user.uid}`).update({
           miGrupo: this.user.miGrupo
       })
-    }
+    },
+    getName(ingrediente){
+      const splitStr = ingrediente.replace(/-/g, ' ').toLowerCase().split(' ');
+      for (let i = 0; i < splitStr.length; i++) {
+          splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+        }
+        return splitStr.join(' '); 
+    },
 }}
 </script>
 

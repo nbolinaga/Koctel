@@ -3,11 +3,11 @@
     <h2 class="titulo primario--text mb-8">Nuestros cocteles</h2>
     <p class="textos texto--text text-md-left text-justify">A continuación encontrarás nuestra gran gama de cocteles de todas partes del mundo, donde te ofrecemos tragos desde los más populares hasta cocteles sin alcohol o sin azúcar. En Koctel siempre estamos actualizando nuestro catálogo de cocteles con los más nuevos</p>
     <div class="d-flex">
-      <v-switch v-model="lightFiltro" dark :label="`Solo Light`" :disabled="alcohol != null || nombre != null"></v-switch>
+      <v-switch v-model="lightFiltro" dark :label="`Solo Light`" :disabled="alcohol != null || nombre != null" class="white--text"></v-switch>
       <v-icon class="pb-2 primario--text" right>{{sinAzucar}}</v-icon>
     </div>
     <div class="d-flex">
-      <v-switch v-model="sinAlcohol" dark :label="`Sin Alcohol`" :disabled="alcohol != null || nombre != null"></v-switch>
+      <v-switch v-model="sinAlcohol" dark :label="`Sin Alcohol`" :disabled="alcohol != null || nombre != null" class="white--text"></v-switch>
       <v-icon class="pb-2 detalles--text" right>{{sinAlcoholLogo}}</v-icon>
     </div>
     <v-autocomplete  v-if="!loading" v-model="nombre" dark :label="sinAlcohol || lightFiltro ? `Desactivar filtros antes de usar` : `Buscar por Nombre`" :items="cocteles" item-text="nombre" clearable :disabled="lightFiltro == true || sinAlcohol == true"></v-autocomplete>

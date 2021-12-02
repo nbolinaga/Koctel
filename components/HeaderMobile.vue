@@ -94,7 +94,7 @@ export default {
                 this.open = false;
             },
             getPerfil() {
-                this.$router.push({ path: `/perfil/${this.user.uid}` })
+                this.$router.push({ path: `/perfil` })
                 this.open = false;
             },
             googleSignIn() {

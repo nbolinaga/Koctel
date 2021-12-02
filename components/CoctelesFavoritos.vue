@@ -1,6 +1,7 @@
 <template>
-    <div class="pa-10 alt">
+    <div class="pa-10 pt-4 alt mt-10">
         <Loader v-if="loading" />
+        <h2 class="primario--text titulo d-flex justify-center my-10">Tus cocteles favoritos</h2>
         <v-row class="d-flex justify-space-around alt">
           <h4 v-if="cocteles.length == 0 && !loading" class="textos primario--text">No se encontro ningun coctel favorito</h4>
           <coctelCard v-for="coctel in cocteles" :key="coctel._id" :coctel="coctel" :userprop="user"/>

@@ -5,7 +5,7 @@
             <v-row no-gutters class="ma-0 pa-0" >
                 <v-col cols="12" md="4">
                     <v-img :src="coctel.img" alt="" height="100%" width="auto" cover>
-                        <v-btn v-if="userID != null" fab big  class="ma-5 float-right" @click.native.stop="like()">
+                        <v-btn v-if="userID != null" fab big  class="ma-5 mt-10 float-right" @click.native.stop="like()">
                             <v-icon v-if="liked" class="primario--text">mdi-heart</v-icon>
                             <v-icon v-else class=" primario--text">mdi-heart-outline</v-icon>
                         </v-btn>
