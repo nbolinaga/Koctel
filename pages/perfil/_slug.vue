@@ -89,8 +89,8 @@
                       <h4 class="my-5">Cocteles Favoritos de esta persona</h4>
                       <li v-for="(favorito, index3) in usuario.favoritos" :key="index3">{{getName(favorito)}}</li>
                     </ul>
-                    <v-btn v-if="!user.miGrupo.includes(usuario)" class="secundario my-12" width="100%" @click="agregarUser(usuario)">Agregar a Mi user.miGrupo</v-btn>
-                    <v-btn v-if="user.miGrupo.includes(usuario)" class="primario my-12 " width="100%" @click="eliminar(usuario)">Eliminar de Mi user.miGrupo</v-btn>
+                    <v-btn v-if="!user.miGrupo.includes(usuario)" class="secundario my-12" width="100%" @click="agregarUser(usuario)">Agregar a Mi Grupo</v-btn>
+                    <v-btn v-if="user.miGrupo.includes(usuario)" class="primario my-12 " width="100%" @click="eliminar(usuario)">Eliminar de Mi Grupo</v-btn>
                 </v-expansion-panel-content>
               </v-expansion-panel >
             </v-expansion-panels>
